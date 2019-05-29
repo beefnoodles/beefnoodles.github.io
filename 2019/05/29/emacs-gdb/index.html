@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://beefnoodles.cc">
-  <title>如何快速上手emacs-gdb | beef noodles</title>
+  <title>如何优雅地使用终端进行调试emacs-gdb | beef noodles</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta name="keywords" content="Linux 计算机 技术积累 py交易">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何快速上手emacs-gdb">
+<meta property="og:title" content="如何优雅地使用终端进行调试emacs-gdb">
 <meta property="og:url" content="http://beefnoodles.cc/2019/05/29/emacs-gdb/index.html">
 <meta property="og:site_name" content="beef noodles">
 <meta property="og:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
@@ -19,9 +19,9 @@
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/2.png">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/3.png">
-<meta property="og:updated_time" content="2019-05-29T10:21:56.086Z">
+<meta property="og:updated_time" content="2019-05-29T13:09:23.212Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何快速上手emacs-gdb">
+<meta name="twitter:title" content="如何优雅地使用终端进行调试emacs-gdb">
 <meta name="twitter:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta name="twitter:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
   
@@ -65,8 +65,6 @@
 			<ul>
 			
 				<li><a href="/">主页</a></li>
-	        
-				<li><a href="/tags/随笔/">随笔</a></li>
 	        
 			</ul>
 		</nav>
@@ -120,8 +118,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -138,9 +134,7 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
-		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 100%"><a href="/">主页</a></li>
 		        
 				</ul>
 			</nav>
@@ -162,13 +156,13 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何快速上手emacs-gdb
+      如何优雅地使用终端进行调试emacs-gdb
     </h1>
   
 
         
         <a href="/2019/05/29/emacs-gdb/" class="archive-article-date">
-  	<time datetime="2019-05-29T10:21:56.086Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+  	<time datetime="2019-05-29T13:09:23.212Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
 </a>
         
       </header>
@@ -212,37 +206,8 @@
 <p>这就是所谓的emacs的gdb插件，不是和命令行gdb一样吗？你需要看下一步</p>
 <h3 id="第六步"><a href="#第六步" class="headerlink" title="第六步"></a>第六步</h3><p>M-x gdb-ma[ny-window]括号中可以不输入，命令会自动补全</p>
 <p><img src="/assets/img/emacs-gdb/3.png" alt="img"></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">左</th>
-<th style="text-align:right">右</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">一般的gdb窗口</td>
-<td style="text-align:right">局部变量和寄存器</td>
-</tr>
-<tr>
-<td style="text-align:left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</td>
-</tr>
-<tr>
-<td style="text-align:left">源代码</td>
-<td style="text-align:right">程序输出</td>
-</tr>
-<tr>
-<td style="text-align:left">可以用鼠标左键点击代码最左边设置和取消断点</td>
-</tr>
-<tr>
-<td style="text-align:left">调用栈</td>
-<td style="text-align:right">断点和线程</td>
-</tr>
-<tr>
-<td style="text-align:left">在调用栈和断点用鼠标中间键点击可以浏览源代码</td>
-</tr>
-</tbody>
-</table>
+<table><br>    <tr><br>        <th align="left">左</th><br>        <th align="right">右</th><br>    </tr><br>    <tr><br>        <td align="left">一般的gdb窗口</td><br>        <td align="right">局部变量和寄存器</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</th><br>    </tr><br>        <tr><br>        <td align="left">源代码</td><br>        <td align="right">程序输出</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">可以用鼠标左键点击代码最左边设置和取消断点</th><br>    </tr><br>        <tr><br>        <td align="left">调用栈</td><br>        <td align="right">断点和线程</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">在调用栈和断点用鼠标中间键点击可以浏览源代码</th><br>    </tr><br></table>
+
 <h3 id="赠品"><a href="#赠品" class="headerlink" title="赠品"></a>赠品</h3><ol>
 <li>窗口乱了怎么办？执行两次M-x gdb-ma[ny-window]</li>
 <li>在用鼠标中间键点击浏览代码时，可能会触发gdb命令窗口被代码占据的bug，这时选择被占据的窗口用C-x k关闭buffer即可</li>
@@ -319,6 +284,16 @@
 </article>
 
   
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/29/emacs-plus/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">emacs奇巧淫技</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">

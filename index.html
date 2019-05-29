@@ -61,8 +61,6 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
-	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -115,8 +113,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -133,9 +129,7 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
-		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 100%"><a href="/">主页</a></li>
 		        
 				</ul>
 			</nav>
@@ -159,13 +153,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/29/emacs-gdb/">如何快速上手emacs-gdb</a>
+      <a class="article-title" href="/2019/05/29/emacs-gdb/">如何优雅地使用终端进行调试emacs-gdb</a>
     </h1>
   
 
         
         <a href="/2019/05/29/emacs-gdb/" class="archive-article-date">
-  	<time datetime="2019-05-29T10:21:56.086Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+  	<time datetime="2019-05-29T13:09:23.212Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
 </a>
         
       </header>
@@ -209,37 +203,8 @@
 <p>这就是所谓的emacs的gdb插件，不是和命令行gdb一样吗？你需要看下一步</p>
 <h3 id="第六步"><a href="#第六步" class="headerlink" title="第六步"></a>第六步</h3><p>M-x gdb-ma[ny-window]括号中可以不输入，命令会自动补全</p>
 <p><img src="/assets/img/emacs-gdb/3.png" alt="img"></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">左</th>
-<th style="text-align:right">右</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">一般的gdb窗口</td>
-<td style="text-align:right">局部变量和寄存器</td>
-</tr>
-<tr>
-<td style="text-align:left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</td>
-</tr>
-<tr>
-<td style="text-align:left">源代码</td>
-<td style="text-align:right">程序输出</td>
-</tr>
-<tr>
-<td style="text-align:left">可以用鼠标左键点击代码最左边设置和取消断点</td>
-</tr>
-<tr>
-<td style="text-align:left">调用栈</td>
-<td style="text-align:right">断点和线程</td>
-</tr>
-<tr>
-<td style="text-align:left">在调用栈和断点用鼠标中间键点击可以浏览源代码</td>
-</tr>
-</tbody>
-</table>
+<table><br>    <tr><br>        <th align="left">左</th><br>        <th align="right">右</th><br>    </tr><br>    <tr><br>        <td align="left">一般的gdb窗口</td><br>        <td align="right">局部变量和寄存器</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</th><br>    </tr><br>        <tr><br>        <td align="left">源代码</td><br>        <td align="right">程序输出</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">可以用鼠标左键点击代码最左边设置和取消断点</th><br>    </tr><br>        <tr><br>        <td align="left">调用栈</td><br>        <td align="right">断点和线程</td><br>    </tr><br>    <tr><br>        <th colspan="2" align="left">在调用栈和断点用鼠标中间键点击可以浏览源代码</th><br>    </tr><br></table>
+
 <h3 id="赠品"><a href="#赠品" class="headerlink" title="赠品"></a>赠品</h3><ol>
 <li>窗口乱了怎么办？执行两次M-x gdb-ma[ny-window]</li>
 <li>在用鼠标中间键点击浏览代码时，可能会触发gdb命令窗口被代码占据的bug，这时选择被占据的窗口用C-x k关闭buffer即可</li>
@@ -259,6 +224,84 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/05/29/emacs-gdb/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-emacs-plus" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/29/emacs-plus/">emacs奇巧淫技</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/29/emacs-plus/" class="archive-article-date">
+  	<time datetime="2019-05-29T13:00:35.619Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言</p>
+<p><img src="/assets/img/emacs-plus/mrfz.jpg" alt="德克萨斯做得到吗？"></p>
+<p>就问vim做得到吗？</p>
+<p>默认配置下按C-\(就是按C-Shift-|这三个键)就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法。但是我就是想学五笔XD。</p>
+<h2 id="安装pyim"><a href="#安装pyim" class="headerlink" title="安装pyim"></a>安装pyim</h2><p>pyim插件中包含五笔输入法，首先配置<a href="https://melpa.org/#/getting-started" target="_blank" rel="noopener">melpa源</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">M-x package-install</span><br><span class="line">pyim</span><br><span class="line">M-x package-install</span><br><span class="line">pyim-wbdict</span><br></pre></td></tr></table></figure>
+<p>安装上后配置~/.emacs文件，在文件最后加入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(require &apos;pyim)</span><br><span class="line">;(require &apos;pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置</span><br><span class="line">;(pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置</span><br><span class="line">(setq default-input-method &quot;pyim&quot;)</span><br><span class="line"></span><br><span class="line">(require &apos;pyim-wbdict)</span><br><span class="line">(pyim-wbdict-v98-enable)</span><br><span class="line">(setq pyim-default-scheme &apos;wubi)</span><br></pre></td></tr></table></figure>
+<p>再打开emacs，切换输入法就可以用五笔打字了。</p>
+<h2 id="用内置输入法干点什么"><a href="#用内置输入法干点什么" class="headerlink" title="用内置输入法干点什么"></a>用内置输入法干点什么</h2><p>用emacs输入中文可以干一些什么呢？这意味着可以在没有桌面的服务器环境上输入中文。同时在本地的字符终端中也可以通过这个方法实现中文的输入。</p>
+<h3 id="让我们尝试用字符终端输入中文"><a href="#让我们尝试用字符终端输入中文" class="headerlink" title="让我们尝试用字符终端输入中文"></a>让我们尝试用字符终端输入中文</h3><p>按Ctrl+Alt+F1进入tty1，这时你可以发现所有的中文字符都不能显示。这是因为终端只支持psf点阵字体，可以通过showconsolefont命令查看当前psf所有的字符，psf文件在/usr/share/consolefonts目录下。通过setfont可以换字体，但是一般情况下终端只支持8位编码，显然是不能支持显示所有中文字符的。</p>
+<p><img src="/assets/img/emacs-plus/1.png" alt="showconsolefont"></p>
+<p>这里有两种方式，一种是给内核打中文补丁，因为内核维护者是不会接受这样的补丁的，因为控制台只会在紧急情况下使用。一般情况下用户应该通过桌面环境或者fbterm之类的基于framebuffer的工具获得Unicode的支持。我们就通过fbterm实现中文支持，从源里下载fbterm。在tty1中运行fbterm并指定字体与大小
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fbterm -n &quot;WenQuanYi Zen Hei Mono&quot; -s 18</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以愉快地在emacs中输入中文了</p>
+<p><img src="/assets/img/emacs-plus/2.png" alt="终端中的emacs中文输入"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/29/emacs-plus/">展开全文 >></a>
         </p>
       
 
