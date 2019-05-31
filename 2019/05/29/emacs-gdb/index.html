@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://beefnoodles.cc">
-  <title>如何优雅地使用终端进行调试emacs-gdb | beef noodles</title>
+  <title>如何优雅地使用终端进行调试emacs-gdb | 现代魔法</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta name="keywords" content="Linux 计算机 技术积累 py交易">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何优雅地使用终端进行调试emacs-gdb">
 <meta property="og:url" content="http://beefnoodles.cc/2019/05/29/emacs-gdb/index.html">
-<meta property="og:site_name" content="beef noodles">
+<meta property="og:site_name" content="现代魔法">
 <meta property="og:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
@@ -25,7 +25,7 @@
 <meta name="twitter:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta name="twitter:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
   
-    <link rel="alternative" href="/atom.xml" title="beef noodles" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="现代魔法" type="application/atom+xml">
   
   
     <link rel="icon" href="/assets/img/favicon.png">
