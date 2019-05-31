@@ -153,13 +153,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/29/emacs-plus/">emacs奇巧淫技</a>
+      <a class="article-title" href="/2019/05/31/emacs-plus/">emacs奇巧淫技</a>
     </h1>
   
 
         
-        <a href="/2019/05/29/emacs-plus/" class="archive-article-date">
-  	<time datetime="2019-05-29T13:16:21.333Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+        <a href="/2019/05/31/emacs-plus/" class="archive-article-date">
+  	<time datetime="2019-05-31T10:39:31.353Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-31</time>
 </a>
         
       </header>
@@ -175,10 +175,10 @@
 <p>安装上后配置~/.emacs文件，在文件最后加入</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(require &apos;pyim)</span><br><span class="line">;(require &apos;pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置</span><br><span class="line">;(pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置</span><br><span class="line">(setq default-input-method &quot;pyim&quot;)</span><br><span class="line"></span><br><span class="line">(require &apos;pyim-wbdict)</span><br><span class="line">(pyim-wbdict-v98-enable)</span><br><span class="line">(setq pyim-default-scheme &apos;wubi)</span><br></pre></td></tr></table></figure>
 <p>再打开emacs，切换输入法就可以用五笔打字了。</p>
-<h2 id="用内置输入法干点什么"><a href="#用内置输入法干点什么" class="headerlink" title="用内置输入法干点什么"></a>用内置输入法干点什么</h2><p>用emacs输入中文可以干一些什么呢？这意味着可以在没有桌面的服务器环境上输入中文。同时在本地的字符终端中也可以通过这个方法实现中文的输入。</p>
+<h2 id="用内置输入法干点什么"><a href="#用内置输入法干点什么" class="headerlink" title="用内置输入法干点什么"></a>用内置输入法干点什么</h2><p>用emacs输入中文可以干一些什么呢？这意味着可以在没有桌面的服务器环境上输入中文，另一方面在本地的字符终端中也可以通过这个方法实现中文的输入。</p>
 <h3 id="让我们尝试用字符终端输入中文"><a href="#让我们尝试用字符终端输入中文" class="headerlink" title="让我们尝试用字符终端输入中文"></a>让我们尝试用字符终端输入中文</h3><p>按Ctrl+Alt+F1进入tty1，这时你可以发现所有的中文字符都不能显示。这是因为终端只支持psf点阵字体，可以通过showconsolefont命令查看当前psf所有的字符，psf文件在/usr/share/consolefonts目录下。通过setfont可以换字体，但是一般情况下终端只支持8位编码，显然是不能支持显示所有中文字符的。</p>
 <p><img src="/assets/img/emacs-plus/1.png" alt="showconsolefont"></p>
-<p>这里有两种方式，一种是给内核打中文补丁，因为内核维护者是不会接受这样的补丁的，因为控制台只会在紧急情况下使用。一般情况下用户应该通过桌面环境或者fbterm之类的基于framebuffer的工具获得Unicode的支持。我们就通过fbterm实现中文支持，从源里下载fbterm。在tty1中运行fbterm并指定字体与大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fbterm -n &quot;WenQuanYi Zen Hei Mono&quot; -s 18</span><br></pre></td></tr></table></figure></p>
+<p>这里有两种方式，一种是给内核打中文补丁，一种是使用fbterm。就第一种方式来说，为什么发行版内核没有集成Unicode补丁。因为内核维护者是不会接受这样的补丁的，因为控制台只会在紧急情况下使用。一般情况下用户应该通过桌面环境或者fbterm之类的基于framebuffer的工具获得Unicode的支持。我们就采取第二种方式实现中文支持，从源里下载fbterm。在tty1中运行fbterm并指定字体与大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fbterm -n &quot;WenQuanYi Zen Hei Mono&quot; -s 18</span><br></pre></td></tr></table></figure></p>
 <p>然后就可以愉快地在emacs中输入中文了</p>
 <p><img src="/assets/img/emacs-plus/2.png" alt="终端中的emacs中文输入"></p>
 
@@ -193,7 +193,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/29/emacs-plus/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/05/31/emacs-plus/">展开全文 >></a>
         </p>
       
 
