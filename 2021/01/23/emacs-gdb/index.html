@@ -6,19 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://beefnoodles.cc">
-  <title>Archives | 现代魔法</title>
+  <title>如何优雅地使用终端进行调试emacs-gdb | 现代魔法</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分享交流技术">
+  <meta name="description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta name="keywords" content="Linux 计算机 技术积累">
-<meta property="og:type" content="website">
-<meta property="og:title" content="现代魔法">
-<meta property="og:url" content="http://beefnoodles.cc/archives/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何优雅地使用终端进行调试emacs-gdb">
+<meta property="og:url" content="http://beefnoodles.cc/2021/01/23/emacs-gdb/index.html">
 <meta property="og:site_name" content="现代魔法">
-<meta property="og:description" content="分享交流技术">
+<meta property="og:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
+<meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/2.png">
+<meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/3.png">
+<meta property="og:updated_time" content="2019-05-29T13:11:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="现代魔法">
-<meta name="twitter:description" content="分享交流技术">
+<meta name="twitter:title" content="如何优雅地使用终端进行调试emacs-gdb">
+<meta name="twitter:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
+<meta name="twitter:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
   
     <link rel="alternative" href="/atom.xml" title="现代魔法" type="application/atom+xml">
   
@@ -158,103 +163,215 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-emacs-gdb" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/23/view_of_blog/" class="archive-article-date">
-  	<time datetime="2021-01-22T18:46:24.223Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-23</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/23/view_of_blog/">关于写博客的看法</a>
+    <h1 class="article-title" itemprop="name">
+      如何优雅地使用终端进行调试emacs-gdb
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/23/emacs-gdb/" class="archive-article-date">
+        
+        <a href="/2021/01/23/emacs-gdb/" class="archive-article-date">
   	<time datetime="2021-01-22T17:43:28.617Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-23</time>
 </a>
-        </div>
-    	 
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？</p>
+<p>作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb插件，发现vim对gdb的支持并不好，因为vim一开始并没有集成gdb的打算，仅有的几个插件已经很久没更新了。然后在知乎上看到这篇文章<a href="https://zhuanlan.zhihu.com/p/32843449" target="_blank" rel="noopener">终端调试哪家强？</a>对emacs的gdb插件有了一个好印象。但是作为坚定的vim党（逃）我怎么能去用emacs呢（其实是懒，不想学新的按键绑定），抱着试一试的心态用了一下emacs，最后。。。。真香</p>
+<p>其实，如果对开源软件比较了解的话，你就会知道gdb和emacs都是出自<a href="https://en.wikipedia.org/wiki/Richard_Stallman" target="_blank" rel="noopener">Richard Stallman</a>之手。那就不会去找vim的gdb插件了。</p>
+<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>安装emacs，在各大发行版的仓库里都有，通过包管理安装即可。</p>
+<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>Emacs自带gdb插件gud，无需手动安装。（是不是惊讶到了，早在2007年emacs就内置了这个模式<a href="https://www.emacswiki.org/emacs/GdbMode" target="_blank" rel="noopener">emacswiki</a>）</p>
+<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>这一步需要学习emacs的基本操作（大概需要30分钟）</p>
+<ol>
+<li>先记住C-x C-c（Ctrl-x Ctrl-c）（两个连续的组合键）为退出</li>
+<li>运行emacs 按C-h  t进入基础教走程跟着做一遍（<a href="/assets/doc/emacs_tutorial.txt">中文教程</a>）</li>
+<li>补充几条教程里没有提到的命令<ul>
+<li>多窗口的命令<ul>
+<li>C-x 1 只保留当前窗口</li>
+<li>C-x 2 水平分屏</li>
+<li>C-x 3 垂直分屏</li>
+<li>C-x 0 关闭当前窗口</li>
+<li>C-x o 切换窗口</li>
+</ul>
+</li>
+<li>其他常用快捷键<ul>
+<li>C-x k关闭缓冲区</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h3><p>在~/.emacs启动脚本中加入(没有则创建)以下内容<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;;通过Alt+方向键切换窗口</span></span><br><span class="line">(<span class="name">global-set-key</span> [M-left] 'windmove-left)</span><br><span class="line">(<span class="name">global-set-key</span> [M-right] 'windmove-right)</span><br><span class="line">(<span class="name">global-set-key</span> [M-up] 'windmove-up)</span><br><span class="line">(<span class="name">global-set-key</span> [M-down] 'windmove-down)</span><br><span class="line"><span class="comment">;;设置一些常用的调试快捷键</span></span><br><span class="line">(<span class="name">global-set-key</span> [f5] 'gud-run)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f5] 'gud-cont)</span><br><span class="line">(<span class="name">global-set-key</span> [f6] 'gud-jump)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f6] 'gud-print)</span><br><span class="line">(<span class="name">global-set-key</span> [f7] 'gud-step)</span><br><span class="line">(<span class="name">global-set-key</span> [f8] 'gud-next)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f7] 'gud-stepi)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f8] 'gud-nexti)</span><br><span class="line">(<span class="name">global-set-key</span> [f9] 'gud-break)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f9] 'gud-remove)</span><br><span class="line">(<span class="name">global-set-key</span> [f10] 'gud-until)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f10] 'gud-finish)</span><br><span class="line"></span><br><span class="line">(<span class="name">global-set-key</span> [f4] 'gud-up)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f4] 'gud-down)</span><br><span class="line"><span class="comment">;;启用鼠标支持</span></span><br><span class="line">(<span class="name">require</span> 'xt-mouse)</span><br><span class="line">(<span class="name">xterm-mouse-mode</span>)</span><br><span class="line">(<span class="name">require</span> 'mouse)</span><br><span class="line">(<span class="name">xterm-mouse-mode</span> <span class="literal">t</span>)</span><br><span class="line">(<span class="name">defun</span> track-mouse (<span class="name">e</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">setq</span> mouse-wheel-follow-mouse 't)</span><br><span class="line"></span><br><span class="line">(<span class="name">defvar</span> alternating-scroll-down-next <span class="literal">t</span>)</span><br><span class="line">(<span class="name">defvar</span> alternating-scroll-up-next <span class="literal">t</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> alternating-scroll-down-line ()</span><br><span class="line">  (<span class="name">interactive</span> <span class="string">"@"</span>)</span><br><span class="line">  (<span class="name">when</span> alternating-scroll-down-next</span><br><span class="line">    (<span class="name">scroll-down-line</span>))</span><br><span class="line">  (<span class="name">setq</span> alternating-scroll-down-next (<span class="name">not</span> alternating-scroll-down-next)))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> alternating-scroll-up-line ()</span><br><span class="line">  (<span class="name">interactive</span> <span class="string">"@"</span>)</span><br><span class="line">  (<span class="name">when</span> alternating-scroll-up-next</span><br><span class="line">    (<span class="name">scroll-up-line</span>))</span><br><span class="line">  (<span class="name">setq</span> alternating-scroll-up-next (<span class="name">not</span> alternating-scroll-up-next)))</span><br><span class="line"><span class="comment">;;设置鼠标滚轮每次只滚动一行</span></span><br><span class="line">(<span class="name">global-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;mouse-4&gt;"</span>) 'alternating-scroll-down-line)</span><br><span class="line">(<span class="name">global-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;mouse-5&gt;"</span>) 'alternating-scroll-up-line)</span><br></pre></td></tr></table></figure></p>
+<h3 id="第五步"><a href="#第五步" class="headerlink" title="第五步"></a>第五步</h3><p>输入终端中emacs -nw 打开 emacs 执行 M-x gdb [回车] 输入要调试的程序</p>
+<p><img src="/assets/img/emacs-gdb/1.png" alt="img"></p>
+<p>每次都运行gdb命令很麻烦，在.bashrc中添加一个函数</p>
+<pre><code class="bash"><span class="comment">#emacs gdb</span>
+<span class="function"><span class="title">gdbtool</span></span> () { emacs -nw --<span class="built_in">eval</span> <span class="string">"(gdb \"gdb -i=mi $*\")"</span>;}
+</code></pre>
+<p>直接输入gdbtool hello就能进入emacs调试模式了</p>
+<p><img src="/assets/img/emacs-gdb/2.png" alt="img"></p>
+<p>这就是所谓的emacs的gdb插件，不是和命令行gdb一样吗？你需要看下一步</p>
+<h3 id="第六步"><a href="#第六步" class="headerlink" title="第六步"></a>第六步</h3><p>M-x gdb-ma[ny-window]括号中可以不输入，命令会自动补全</p>
+<p><img src="/assets/img/emacs-gdb/3.png" alt="img"></p>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/23/emacs-gdb/">如何优雅地使用终端进行调试emacs-gdb</a>
-    </h1>
-  
+<table>
+    <tr>
+        <th align="left">左</th>
+        <th align="right">右</th>
+    </tr>
+    <tr>
+        <td align="left">一般的gdb窗口</td>
+        <td align="right">局部变量和寄存器</td>
+    </tr>
+    <tr>
+        <th colspan="2" align="left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</th>
+    </tr>
+        <tr>
+        <td align="left">源代码</td>
+        <td align="right">程序输出</td>
+    </tr>
+    <tr>
+        <th colspan="2" align="left">可以用鼠标左键点击代码最左边设置和取消断点</th>
+    </tr>
+        <tr>
+        <td align="left">调用栈</td>
+        <td align="right">断点和线程</td>
+    </tr>
+    <tr>
+        <th colspan="2" align="left">在调用栈和断点用鼠标中间键点击可以浏览源代码</th>
+    </tr>
+</table>
 
-        <div class="article-info info-on-right">
-          
-          
+<h3 id="赠品"><a href="#赠品" class="headerlink" title="赠品"></a>赠品</h3><ol>
+<li>窗口乱了怎么办？执行两次M-x gdb-ma[ny-window]</li>
+<li>在用鼠标中间键点击浏览代码时，可能会触发gdb命令窗口被代码占据的bug，这时选择被占据的窗口用C-x k关闭buffer即可</li>
+<li>我想临时把一个窗口放大，然后回到多窗口。用<a href="http://www.ergoemacs.org/emacs/emacs_winner_mode.html" target="_blank" rel="noopener">winner-mode</a>。运行M-x winner-mode打开winner-mode，C-x 1关闭当前窗口以外窗口，然后通过C-c ←返回。</li>
+</ol>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>关于配合etags进行代码跳转和补全这里就不说了，网上有很多教程。emacs给我带来了全新的终端体验，包括emacs自带的输入法等等，我会在下一篇博客中介绍。</p>
 
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://beefnoodles.cc/2021/01/23/emacs-gdb/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/23/emacs-plus/" class="archive-article-date">
-  	<time datetime="2021-01-22T17:43:28.617Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-23</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2021/01/23/view_of_blog/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          关于写博客的看法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/01/23/emacs-plus/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">emacs奇巧淫技</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/23/emacs-plus/">emacs奇巧淫技</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -277,8 +394,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
