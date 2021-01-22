@@ -1512,14 +1512,7 @@ pre .css ~ * .id {
   .tools-col .tools-section-friends {
     padding-top: 30px; }
   .tools-col .aboutme-wrap {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    display: inline;
     width: 100%;
     height: 100%;
     color: #fffdd8;
