@@ -181,25 +181,25 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近实验室项目验收需要在多个验收地点部署演示环境，我们的演示环境包含一个老版本的rose编译器，在没有root权限的情况下，无法使用包管理，其依赖的安装十分繁琐，于是考虑预先打包docker镜像的方案。</p>
-<p>本文主要写给验收地点的同学，他们完全没有接触过docker，所以是一个step-by-step的基础教程，有一定docker经验的朋友可以不需要看本文，附录中整理了一组知乎上一个比较好的讲docker的文章，对我挺有帮助的，分享给大家。</p>
-<h2 id="docker使用教程"><a href="#docker使用教程" class="headerlink" title="docker使用教程"></a>docker使用教程</h2><p>本文主要教大家如何使用基础的docker命令以导入和使用预安装的rose环境</p>
+<p>本文主要写给验收地点的同学，他们完全没有接触过docker，所以是一个step-by-step的基础教程，有一定docker经验的同学可以不需要看本文，附录中整理了一组知乎上一个比较好的讲docker的文章，对我挺有帮助的，分享给大家。</p>
+<h2 id="docker镜像的导出"><a href="#docker镜像的导出" class="headerlink" title="docker镜像的导出"></a>docker镜像的导出</h2><p>在我们对镜像做出一些自定义改动（如安装软件包等）后，需要通过执行一些命令来保存镜像，这里有两种方案</p>
+<ol>
+<li>使用docker commit命令提交镜像，然后用docker save保存镜像，这种方式导出的镜像是分层的。</li>
+<li>使用docker export命令导出指定容器，这种方式保存的镜像的是不分层的且没有入口信息。</li>
+</ol>
+<p>理论上方式2导出的镜像会小一些，但是就失去了docker增量构建镜像的优势。根据使用场景不同选择不同的导出方式。</p>
+<h2 id="docker镜像的使用"><a href="#docker镜像的使用" class="headerlink" title="docker镜像的使用"></a>docker镜像的使用</h2><p>以下教大家如何零基础使用docker命令导入和使用镜像</p>
 <p>参考教程：</p>
 <p><a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/docker/docker-tutorial.html</a></p>
 <p><a href="https://docs.docker.com/" target="_blank" rel="noopener">https://docs.docker.com/</a></p>
 <p>官方镜像仓库：</p>
 <p><a href="https://registry.hub.docker.com/search?q=ubuntu&amp;type=image" target="_blank" rel="noopener">https://registry.hub.docker.com/search?q=ubuntu&amp;type=image</a></p>
 <h3 id="检查宿主机docker安装情况"><a href="#检查宿主机docker安装情况" class="headerlink" title="检查宿主机docker安装情况"></a>检查宿主机docker安装情况</h3><ol>
-<li><p>检查是否有docker命令</p>
-</li>
-<li><p>检查docker ps命令是否可用</p>
-<ol>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">Got permission denied <span class="keyword">while</span> trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.29/containers/json: dial unix /var/run/docker.sock: connect: permission denied</span><br><span class="line"><span class="comment"># 出现以上情况说明当前用户没有使用docker的权限，需要联系系统管理员</span></span><br><span class="line">lyt@server81:~$ ls /var/run/docker.sock  -lh</span><br><span class="line">srw-rw---- 1 root docker 0 Jun 10 09:59 /var/run/docker.sock</span><br><span class="line"><span class="comment"># 一般来说/var/run/docer.sock的gid是docker，所以让系统管理员将当前用户加入docker组可以解决该问题</span></span><br><span class="line"><span class="comment"># usermod -aG docker username</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line"><span class="comment"># 得到以上输出代表可用</span></span><br></pre></td></tr></table></figure>
-</li>
+<li>检查是否有docker命令</li>
+<li>检查docker ps命令是否可用</li>
 </ol>
-</li>
-</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">Got permission denied <span class="keyword">while</span> trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.29/containers/json: dial unix /var/run/docker.sock: connect: permission denied</span><br><span class="line"><span class="comment"># 出现以上情况说明当前用户没有使用docker的权限，需要联系系统管理员</span></span><br><span class="line"><span class="comment"># 一般来说/var/run/docer.sock的gid是docker</span></span><br><span class="line">lyt@server81:~$ ls /var/run/docker.sock  -lh</span><br><span class="line">srw-rw---- 1 root docker 0 Jun 10 09:59 /var/run/docker.sock</span><br><span class="line"><span class="comment">#所以让系统管理员将当前用户加入docker组可以解决该问题</span></span><br><span class="line"><span class="comment"># usermod -aG docker username</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line"><span class="comment"># 得到以上输出代表可用</span></span><br></pre></td></tr></table></figure>
 <h3 id="导入镜像"><a href="#导入镜像" class="headerlink" title="导入镜像"></a>导入镜像</h3><p>有两种导入导出方式不能混用，这一节的镜像使用docker save导出，所以使用docker load导入，另一种方式见下一节</p>
 <h4 id="导入测试镜像"><a href="#导入测试镜像" class="headerlink" title="导入测试镜像"></a>导入测试镜像</h4><ol>
 <li>下载得到<code>docker-test.tar</code></li>
