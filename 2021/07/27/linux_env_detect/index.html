@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://beefnoodles.cc">
-  <title>Tag: tools | 现代魔法</title>
+  <title>查询Linux服务器软硬件信息 | 现代魔法</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分享交流技术">
-<meta name="keywords" content="Linux 计算机 技术积累">
-<meta property="og:type" content="website">
-<meta property="og:title" content="现代魔法">
-<meta property="og:url" content="http://beefnoodles.cc/tags/tools/index.html">
+  <meta name="description" content="背景介绍读研期间在学校实验室或者工作中，老大经常会分配一些服务器给我们，当我们拿到一台新的Linux服务器后最好先确定一些基本的系统信息以方便后续的使用。 常用信息常用的信息有：    项目 命令     cpu lscpu    cat /proc/cpuinfo   内核版本 uname -a   系统版本 ls /etc/*release;cat /etc/*release   内存大小 f">
+<meta name="keywords" content="linux,cmd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询Linux服务器软硬件信息">
+<meta property="og:url" content="http://beefnoodles.cc/2021/07/27/linux_env_detect/index.html">
 <meta property="og:site_name" content="现代魔法">
-<meta property="og:description" content="分享交流技术">
+<meta property="og:description" content="背景介绍读研期间在学校实验室或者工作中，老大经常会分配一些服务器给我们，当我们拿到一台新的Linux服务器后最好先确定一些基本的系统信息以方便后续的使用。 常用信息常用的信息有：    项目 命令     cpu lscpu    cat /proc/cpuinfo   内核版本 uname -a   系统版本 ls /etc/*release;cat /etc/*release   内存大小 f">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-08-24T06:19:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="现代魔法">
-<meta name="twitter:description" content="分享交流技术">
+<meta name="twitter:title" content="查询Linux服务器软硬件信息">
+<meta name="twitter:description" content="背景介绍读研期间在学校实验室或者工作中，老大经常会分配一些服务器给我们，当我们拿到一台新的Linux服务器后最好先确定一些基本的系统信息以方便后续的使用。 常用信息常用的信息有：    项目 命令     cpu lscpu    cat /proc/cpuinfo   内核版本 uname -a   系统版本 ls /etc/*release;cat /etc/*release   内存大小 f">
   
     <link rel="alternative" href="/atom.xml" title="现代魔法" type="application/atom+xml">
   
@@ -158,68 +159,281 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-linux_env_detect" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/29/emacs-gdb/" class="archive-article-date">
-  	<time datetime="2019-05-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/29/emacs-gdb/">如何优雅地使用终端进行调试emacs-gdb</a>
+    <h1 class="article-title" itemprop="name">
+      查询Linux服务器软硬件信息
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/07/27/linux_env_detect/" class="archive-article-date">
+  	<time datetime="2021-07-26T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>读研期间在学校实验室或者工作中，老大经常会分配一些服务器给我们，当我们拿到一台新的Linux服务器后最好先确定一些基本的系统信息以方便后续的使用。</p>
+<h2 id="常用信息"><a href="#常用信息" class="headerlink" title="常用信息"></a>常用信息</h2><p>常用的信息有：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">项目</th>
+<th style="text-align:left">命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">cpu</td>
+<td style="text-align:left">lscpu</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">cat /proc/cpuinfo</td>
+</tr>
+<tr>
+<td style="text-align:left">内核版本</td>
+<td style="text-align:left">uname -a</td>
+</tr>
+<tr>
+<td style="text-align:left">系统版本</td>
+<td style="text-align:left">ls /etc/*release;cat /etc/*release</td>
+</tr>
+<tr>
+<td style="text-align:left">内存大小</td>
+<td style="text-align:left">free -h</td>
+</tr>
+<tr>
+<td style="text-align:left">编译器版本</td>
+<td style="text-align:left">gcc -v</td>
+</tr>
+<tr>
+<td style="text-align:left">mpi版本</td>
+<td style="text-align:left">mpif90 -v</td>
+</tr>
+<tr>
+<td style="text-align:left">NUMA相关信息</td>
+<td style="text-align:left">需要额外的hwloc库</td>
+</tr>
+<tr>
+<td style="text-align:left">包管理</td>
+<td style="text-align:left">apt/dpkg是debian系, yum/rpm是redhat系, pacman是arch系</td>
+</tr>
+<tr>
+<td style="text-align:left">当前shell类型</td>
+<td style="text-align:left">echo $0</td>
+</tr>
+<tr>
+<td style="text-align:left">硬盘使用信息</td>
+<td style="text-align:left">df -h</td>
+</tr>
+<tr>
+<td style="text-align:left">PCI设备信息</td>
+<td style="text-align:left">lspci -vvv</td>
+</tr>
+<tr>
+<td style="text-align:left">查看ip</td>
+<td style="text-align:left">ifconfig或ip addr</td>
+</tr>
+<tr>
+<td style="text-align:left">查看路由</td>
+<td style="text-align:left">route -n或ip route</td>
+</tr>
+<tr>
+<td style="text-align:left">查看端口监听</td>
+<td style="text-align:left">netstat -lutnp或ss -lutnp</td>
+</tr>
+<tr>
+<td style="text-align:left">查看DNS</td>
+<td style="text-align:left">cat /etc/resolv.conf</td>
+</tr>
+</tbody>
+</table>
+<p>在探测环境的过程中的一些技巧</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">技巧</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">通过Tab键补全</td>
+<td style="text-align:left">在探索不熟悉的路径时很有用</td>
+</tr>
+<tr>
+<td style="text-align:left">type和which命令</td>
+<td style="text-align:left">查看命令的类型和路径</td>
+</tr>
+</tbody>
+</table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>拿到一个的账号登录机器后，脑海中对一些系统信息最好有一个第一印象，在后续遇到问题的时候可能会有帮助。比如知道了包管理的方式，在编译报<code>xxx not found</code>错误的时候就可以有针对性的使用<code>dpkg -L</code>或者<code>rpm -qa</code>找包；<code>dpkg -l xxx</code>或者<code>rpm -ql xxx</code>找文件。<code>df -h</code>让我们对剩余磁盘空间有一个估计，避免llvm编译到一半磁盘不够的窘态。网络相关信息能帮助我们解决一些网络故障。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">tools</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">gdb</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cmd</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://beefnoodles.cc/2021/07/27/linux_env_detect/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/08/16/docker_rose/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          docker简单使用教程
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2021/01/22/aboutme/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">迟来的自我介绍</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
+  
+    <div style="margin:30px;">
+    <section id="comments" style="padding:10px;background:#fff;">
+      <div id="vcomment" class="comment"></div> 
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+   var notify = 'true' == true ? true : false;
+   var verify = 'false' == true ? true : false;
+    window.onload = function() {
+        new Valine({
+            el: '.comment',
+            notify: notify,
+            verify: verify,
+            app_id: "aRjDPE3ERAQRinAk06mMV2Xn-gzGzoHsz",
+            app_key: "IpKmQJXuOAvRmJOYr5QqwnER",
+            placeholder: "(๑•̀ㅂ•́)و✧来交流一下吧",
+            avatar:"mm"
+        });
+    }
+</script>
+
+    </section>
+    </div>
+  
+
 
 
           </div>
@@ -252,9 +466,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

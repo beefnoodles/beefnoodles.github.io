@@ -291,6 +291,179 @@
 
 
   
+    <article id="post-linux_env_detect" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/27/linux_env_detect/">查询Linux服务器软硬件信息</a>
+    </h1>
+  
+
+        
+        <a href="/2021/07/27/linux_env_detect/" class="archive-article-date">
+  	<time datetime="2021-07-26T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>读研期间在学校实验室或者工作中，老大经常会分配一些服务器给我们，当我们拿到一台新的Linux服务器后最好先确定一些基本的系统信息以方便后续的使用。</p>
+<h2 id="常用信息"><a href="#常用信息" class="headerlink" title="常用信息"></a>常用信息</h2><p>常用的信息有：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">项目</th>
+<th style="text-align:left">命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">cpu</td>
+<td style="text-align:left">lscpu</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">cat /proc/cpuinfo</td>
+</tr>
+<tr>
+<td style="text-align:left">内核版本</td>
+<td style="text-align:left">uname -a</td>
+</tr>
+<tr>
+<td style="text-align:left">系统版本</td>
+<td style="text-align:left">ls /etc/*release;cat /etc/*release</td>
+</tr>
+<tr>
+<td style="text-align:left">内存大小</td>
+<td style="text-align:left">free -h</td>
+</tr>
+<tr>
+<td style="text-align:left">编译器版本</td>
+<td style="text-align:left">gcc -v</td>
+</tr>
+<tr>
+<td style="text-align:left">mpi版本</td>
+<td style="text-align:left">mpif90 -v</td>
+</tr>
+<tr>
+<td style="text-align:left">NUMA相关信息</td>
+<td style="text-align:left">需要额外的hwloc库</td>
+</tr>
+<tr>
+<td style="text-align:left">包管理</td>
+<td style="text-align:left">apt/dpkg是debian系, yum/rpm是redhat系, pacman是arch系</td>
+</tr>
+<tr>
+<td style="text-align:left">当前shell类型</td>
+<td style="text-align:left">echo $0</td>
+</tr>
+<tr>
+<td style="text-align:left">硬盘使用信息</td>
+<td style="text-align:left">df -h</td>
+</tr>
+<tr>
+<td style="text-align:left">PCI设备信息</td>
+<td style="text-align:left">lspci -vvv</td>
+</tr>
+<tr>
+<td style="text-align:left">查看ip</td>
+<td style="text-align:left">ifconfig或ip addr</td>
+</tr>
+<tr>
+<td style="text-align:left">查看路由</td>
+<td style="text-align:left">route -n或ip route</td>
+</tr>
+<tr>
+<td style="text-align:left">查看端口监听</td>
+<td style="text-align:left">netstat -lutnp或ss -lutnp</td>
+</tr>
+<tr>
+<td style="text-align:left">查看DNS</td>
+<td style="text-align:left">cat /etc/resolv.conf</td>
+</tr>
+</tbody>
+</table>
+<p>在探测环境的过程中的一些技巧</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">技巧</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">通过Tab键补全</td>
+<td style="text-align:left">在探索不熟悉的路径时很有用</td>
+</tr>
+<tr>
+<td style="text-align:left">type和which命令</td>
+<td style="text-align:left">查看命令的类型和路径</td>
+</tr>
+</tbody>
+</table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>拿到一个的账号登录机器后，脑海中对一些系统信息最好有一个第一印象，在后续遇到问题的时候可能会有帮助。比如知道了包管理的方式，在编译报<code>xxx not found</code>错误的时候就可以有针对性的使用<code>dpkg -L</code>或者<code>rpm -qa</code>找包；<code>dpkg -l xxx</code>或者<code>rpm -ql xxx</code>找文件。<code>df -h</code>让我们对剩余磁盘空间有一个估计，避免llvm编译到一半磁盘不够的窘态。网络相关信息能帮助我们解决一些网络故障。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">cmd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/07/27/linux_env_detect/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-aboutme" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -446,11 +619,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">view</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">view</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -843,30 +1016,6 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">docker,部署,容器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tools,gdb,linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">emacs,linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">view</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">关于我,随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">view,观点,随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
@@ -896,6 +1045,14 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">emacs</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">cmd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">view</a>
               </li>
              
               <li class="article-tag-list-item">
