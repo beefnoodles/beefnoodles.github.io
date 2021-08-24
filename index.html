@@ -160,6 +160,129 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-docker_rose" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/16/docker_rose/">docker简单使用教程</a>
+    </h1>
+  
+
+        
+        <a href="/2021/08/16/docker_rose/" class="archive-article-date">
+  	<time datetime="2021-08-15T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近实验室项目验收需要在多个验收地点部署演示环境，我们的演示环境包含一个老版本的rose编译器，在没有root权限的情况下，无法使用包管理，其依赖的安装十分繁琐，于是考虑预先打包docker镜像的方案。</p>
+<p>本文主要写给验收地点的同学，他们完全没有接触过docker，所以是一个step-by-step的基础教程，有一定docker经验的朋友可以不需要看本文，附录中整理了一组知乎上一个比较好的讲docker的文章，对我挺有帮助的，分享给大家。</p>
+<h2 id="docker使用教程"><a href="#docker使用教程" class="headerlink" title="docker使用教程"></a>docker使用教程</h2><p>本文主要教大家如何使用基础的docker命令以导入和使用预安装的rose环境</p>
+<p>参考教程：</p>
+<p><a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/docker/docker-tutorial.html</a></p>
+<p><a href="https://docs.docker.com/" target="_blank" rel="noopener">https://docs.docker.com/</a></p>
+<p>官方镜像仓库：</p>
+<p><a href="https://registry.hub.docker.com/search?q=ubuntu&amp;type=image" target="_blank" rel="noopener">https://registry.hub.docker.com/search?q=ubuntu&amp;type=image</a></p>
+<h3 id="检查宿主机docker安装情况"><a href="#检查宿主机docker安装情况" class="headerlink" title="检查宿主机docker安装情况"></a>检查宿主机docker安装情况</h3><ol>
+<li><p>检查是否有docker命令</p>
+</li>
+<li><p>检查docker ps命令是否可用</p>
+<ol>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">Got permission denied <span class="keyword">while</span> trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.29/containers/json: dial unix /var/run/docker.sock: connect: permission denied</span><br><span class="line"><span class="comment"># 出现以上情况说明当前用户没有使用docker的权限，需要联系系统管理员</span></span><br><span class="line">lyt@server81:~$ ls /var/run/docker.sock  -lh</span><br><span class="line">srw-rw---- 1 root docker 0 Jun 10 09:59 /var/run/docker.sock</span><br><span class="line"><span class="comment"># 一般来说/var/run/docer.sock的gid是docker，所以让系统管理员将当前用户加入docker组可以解决该问题</span></span><br><span class="line"><span class="comment"># usermod -aG docker username</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line"><span class="comment"># 得到以上输出代表可用</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="导入镜像"><a href="#导入镜像" class="headerlink" title="导入镜像"></a>导入镜像</h3><p>有两种导入导出方式不能混用，这一节的镜像使用docker save导出，所以使用docker load导入，另一种方式见下一节</p>
+<h4 id="导入测试镜像"><a href="#导入测试镜像" class="headerlink" title="导入测试镜像"></a>导入测试镜像</h4><ol>
+<li>下载得到<code>docker-test.tar</code></li>
+<li>运行<code>docker load -i /path/to/docker-test.tar</code></li>
+<li>屏幕输出一个image id如：<code>Loaded image ID: sha256:f2a91732366c0332ccd7afd2a5c4ff2b9af81f549370f7a19acd460f87686bc7</code></li>
+<li>运行docker run -it f2a91732366得到以下输出即为导入成功，可以继续进行下一步操作</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\ICT&gt; docker run -it f2a91732366c</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line">    (amd64)</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https://cloud.docker.com/</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/engine/userguide/</span><br></pre></td></tr></table></figure>
+<h4 id="导入镜像-1"><a href="#导入镜像-1" class="headerlink" title="导入镜像"></a>导入镜像</h4><ol>
+<li>下载得到<code>rose-0.9.5a-withsrc-small.tar</code></li>
+<li>运行<code>docker load -i /path/to/rose-0.9.5a-withsrc-small.tar</code></li>
+<li>这一步等待时间大概一分钟，同样得到一个image id如：<code>Loaded image ID: sha256:6abfa470dc38da5dd727680811eeef94945faec58545933f1ade482f2c4b29b3</code></li>
+<li>运行docker run -it 6abfa470dc38 /bin/bash 得到以下输出即为导入成功，可以继续进行下一步操作</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\ICT&gt; docker run -it 6abfa470dc38 /bin/bash</span><br><span class="line">root@65141e60ff19:/#</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以看到提示符已经变了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里我们先用<span class="built_in">exit</span>命令退出docker环境</span></span><br></pre></td></tr></table></figure>
+<h4 id="使用容器"><a href="#使用容器" class="headerlink" title="使用容器"></a>使用容器</h4><blockquote>
+<p>从用户的角度简单介绍一下容器技术，对于用户来说，容器表现得像一台Linux虚拟机，但是它的部署成本和性能相比虚拟机有很大的优势。镜像仓库提供大量的标准发行版环境和软件环境，让部署与维护变得很容易。它将用户空间虚拟化，提供了一套完全独立于宿主机的根文件系统与独立的运行时库环境，我们知道在Linux中切换系统软件的版本是一件很麻烦的事，需要处理许多依赖，同时很容易把系统的正常运行环境破坏，用容器就完美解决了这个问题。</p>
+</blockquote>
+<p>回到我们的rose环境使用上，上面我们只用到了-it两个选项，这两个选项是打开交互所必须的选项，否则容器执行完后会直接结束。以上的运行方式docker与宿主机完全独立，文件不能相互访问。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v /hostside/path:/data 6abfa470dc38 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>我们用-v选项做一个目录的映射，冒号的左边宿主机目录，右边是容器中的目录。这样就能双向地传输文件。</p>
+<p>目前在镜像中rose被安装在/opt/rose; rose的源码目录在/opt/rose-src; boost库安装在/opt/boost</p>
+<h3 id="8月16日更新"><a href="#8月16日更新" class="headerlink" title="8月16日更新"></a>8月16日更新</h3><p>新增了带scp和mpi的镜像，采用了与之前不同的导出方式（<a href="https://www.cnblogs.com/linjiqin/p/8618635.html" target="_blank" rel="noopener">两种镜像导出方式</a>），需要用docker import命令导入而不是docker load命令。采用docker export导出的镜像（1928MB）会小于采用docker save导出的镜像(1991MB)，为方便网络传输采用了docker export导出。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker import ./rose-0.9.5a-withsrc-withscp-withmpi.tar rose-0.9.5a-withscp</span></span><br></pre></td></tr></table></figure>
+<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><a href="https://zhuanlan.zhihu.com/p/49492290" target="_blank" rel="noopener">由浅入深docker系列： (1)安装使用</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/49912239" target="_blank" rel="noopener">由浅入深docker系列： (2)docker构建</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/51055141" target="_blank" rel="noopener">由浅入深docker系列： (3)docker-compose</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/51836305" target="_blank" rel="noopener">由浅入深docker系列： (4)容器与虚拟机</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/67021108" target="_blank" rel="noopener">由浅入深docker系列： (5)资源隔离</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/70424048" target="_blank" rel="noopener">由浅入深docker系列： (6)镜像分层</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">docker,部署,容器</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/08/16/docker_rose/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-aboutme" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -685,6 +808,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">关于我</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">docker,部署,容器</a>
               </li>
              
               <li class="article-tag-list-item">
