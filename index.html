@@ -182,55 +182,9 @@
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近实验室项目验收需要在多个验收地点部署演示环境，我们的演示环境包含一个老版本的rose编译器，在没有root权限的情况下，无法使用包管理，其依赖的安装十分繁琐，于是考虑预先打包docker镜像的方案。</p>
 <p>本文主要写给验收地点的同学，他们完全没有接触过docker，所以是一个step-by-step的基础教程，有一定docker经验的同学可以不需要看本文，附录中整理了一组知乎上一个比较好的讲docker的文章，对我挺有帮助的，分享给大家。</p>
-<h2 id="docker镜像的导出"><a href="#docker镜像的导出" class="headerlink" title="docker镜像的导出"></a>docker镜像的导出</h2><p>在我们对镜像做出一些自定义改动（如安装软件包等）后，需要通过执行一些命令来保存镜像，这里有两种方案</p>
-<ol>
-<li>使用docker commit命令提交镜像，然后用docker save保存镜像，这种方式导出的镜像是分层的。</li>
-<li>使用docker export命令导出指定容器，这种方式保存的镜像的是不分层的且没有入口信息。</li>
-</ol>
-<p>理论上方式2导出的镜像会小一些，但是就失去了docker增量构建镜像的优势。根据使用场景不同选择不同的导出方式。</p>
-<h2 id="docker镜像的使用"><a href="#docker镜像的使用" class="headerlink" title="docker镜像的使用"></a>docker镜像的使用</h2><p>以下教大家如何零基础使用docker命令导入和使用镜像</p>
-<p>参考教程：</p>
-<p><a href="https://www.runoob.com/docker/docker-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/docker/docker-tutorial.html</a></p>
-<p><a href="https://docs.docker.com/" target="_blank" rel="noopener">https://docs.docker.com/</a></p>
-<p>官方镜像仓库：</p>
-<p><a href="https://registry.hub.docker.com/search?q=ubuntu&amp;type=image" target="_blank" rel="noopener">https://registry.hub.docker.com/search?q=ubuntu&amp;type=image</a></p>
-<h3 id="检查宿主机docker安装情况"><a href="#检查宿主机docker安装情况" class="headerlink" title="检查宿主机docker安装情况"></a>检查宿主机docker安装情况</h3><ol>
-<li>检查是否有docker命令</li>
-<li>检查docker ps命令是否可用</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">Got permission denied <span class="keyword">while</span> trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.29/containers/json: dial unix /var/run/docker.sock: connect: permission denied</span><br><span class="line"><span class="comment"># 出现以上情况说明当前用户没有使用docker的权限，需要联系系统管理员</span></span><br><span class="line"><span class="comment"># 一般来说/var/run/docer.sock的gid是docker</span></span><br><span class="line">lyt@server81:~$ ls /var/run/docker.sock  -lh</span><br><span class="line">srw-rw---- 1 root docker 0 Jun 10 09:59 /var/run/docker.sock</span><br><span class="line"><span class="comment">#所以让系统管理员将当前用户加入docker组可以解决该问题</span></span><br><span class="line"><span class="comment"># usermod -aG docker username</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lyt@server81:~$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line"><span class="comment"># 得到以上输出代表可用</span></span><br></pre></td></tr></table></figure>
-<h3 id="导入镜像"><a href="#导入镜像" class="headerlink" title="导入镜像"></a>导入镜像</h3><p>有两种导入导出方式不能混用，这一节的镜像使用docker save导出，所以使用docker load导入，另一种方式见下一节</p>
-<h4 id="导入测试镜像"><a href="#导入测试镜像" class="headerlink" title="导入测试镜像"></a>导入测试镜像</h4><ol>
-<li>下载得到<code>docker-test.tar</code></li>
-<li>运行<code>docker load -i /path/to/docker-test.tar</code></li>
-<li>屏幕输出一个image id如：<code>Loaded image ID: sha256:f2a91732366c0332ccd7afd2a5c4ff2b9af81f549370f7a19acd460f87686bc7</code></li>
-<li>运行docker run -it f2a91732366得到以下输出即为导入成功，可以继续进行下一步操作</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\ICT&gt; docker run -it f2a91732366c</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line">    (amd64)</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https://cloud.docker.com/</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/engine/userguide/</span><br></pre></td></tr></table></figure>
-<h4 id="导入镜像-1"><a href="#导入镜像-1" class="headerlink" title="导入镜像"></a>导入镜像</h4><ol>
-<li>下载得到<code>rose-0.9.5a-withsrc-small.tar</code></li>
-<li>运行<code>docker load -i /path/to/rose-0.9.5a-withsrc-small.tar</code></li>
-<li>这一步等待时间大概一分钟，同样得到一个image id如：<code>Loaded image ID: sha256:6abfa470dc38da5dd727680811eeef94945faec58545933f1ade482f2c4b29b3</code></li>
-<li>运行docker run -it 6abfa470dc38 /bin/bash 得到以下输出即为导入成功，可以继续进行下一步操作</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\ICT&gt; docker run -it 6abfa470dc38 /bin/bash</span><br><span class="line">root@65141e60ff19:/#</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以看到提示符已经变了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里我们先用<span class="built_in">exit</span>命令退出docker环境</span></span><br></pre></td></tr></table></figure>
-<h4 id="使用容器"><a href="#使用容器" class="headerlink" title="使用容器"></a>使用容器</h4><blockquote>
-<p>从用户的角度简单介绍一下容器技术，对于用户来说，容器表现得像一台Linux虚拟机，但是它的部署成本和性能相比虚拟机有很大的优势。镜像仓库提供大量的标准发行版环境和软件环境，让部署与维护变得很容易。它将用户空间虚拟化，提供了一套完全独立于宿主机的根文件系统与独立的运行时库环境，我们知道在Linux中切换系统软件的版本是一件很麻烦的事，需要处理许多依赖，同时很容易把系统的正常运行环境破坏，用容器就完美解决了这个问题。</p>
-</blockquote>
-<p>回到我们的rose环境使用上，上面我们只用到了-it两个选项，这两个选项是打开交互所必须的选项，否则容器执行完后会直接结束。以上的运行方式docker与宿主机完全独立，文件不能相互访问。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v /hostside/path:/data 6abfa470dc38 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>我们用-v选项做一个目录的映射，冒号的左边宿主机目录，右边是容器中的目录。这样就能双向地传输文件。</p>
-<p>目前在镜像中rose被安装在/opt/rose; rose的源码目录在/opt/rose-src; boost库安装在/opt/boost</p>
-<h3 id="8月16日更新"><a href="#8月16日更新" class="headerlink" title="8月16日更新"></a>8月16日更新</h3><p>新增了带scp和mpi的镜像，采用了与之前不同的导出方式（<a href="https://www.cnblogs.com/linjiqin/p/8618635.html" target="_blank" rel="noopener">两种镜像导出方式</a>），需要用docker import命令导入而不是docker load命令。采用docker export导出的镜像（1928MB）会小于采用docker save导出的镜像(1991MB)，为方便网络传输采用了docker export导出。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker import ./rose-0.9.5a-withsrc-withscp-withmpi.tar rose-0.9.5a-withscp</span></span><br></pre></td></tr></table></figure>
-<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><a href="https://zhuanlan.zhihu.com/p/49492290" target="_blank" rel="noopener">由浅入深docker系列： (1)安装使用</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/49912239" target="_blank" rel="noopener">由浅入深docker系列： (2)docker构建</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/51055141" target="_blank" rel="noopener">由浅入深docker系列： (3)docker-compose</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/51836305" target="_blank" rel="noopener">由浅入深docker系列： (4)容器与虚拟机</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/67021108" target="_blank" rel="noopener">由浅入深docker系列： (5)资源隔离</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/70424048" target="_blank" rel="noopener">由浅入深docker系列： (6)镜像分层</a></p>
-
+        
+          <a class="article-more-a" href="/2021/08/16/docker_rose/#more">more >></a>
+        
       
 
       
@@ -387,27 +341,9 @@
 </tr>
 </tbody>
 </table>
-<p>在探测环境的过程中的一些技巧</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">技巧</th>
-<th style="text-align:left">作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">通过Tab键补全</td>
-<td style="text-align:left">在探索不熟悉的路径时很有用</td>
-</tr>
-<tr>
-<td style="text-align:left">type和which命令</td>
-<td style="text-align:left">查看命令的类型和路径</td>
-</tr>
-</tbody>
-</table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>拿到一个的账号登录机器后，脑海中对一些系统信息最好有一个第一印象，在后续遇到问题的时候可能会有帮助。比如知道了包管理的方式，在编译报<code>xxx not found</code>错误的时候就可以有针对性的使用<code>dpkg -L</code>或者<code>rpm -qa</code>找包；<code>dpkg -l xxx</code>或者<code>rpm -ql xxx</code>找文件。<code>df -h</code>让我们对剩余磁盘空间有一个估计，避免llvm编译到一半磁盘不够的窘态。网络相关信息能帮助我们解决一些网络故障。</p>
-
+        
+          <a class="article-more-a" href="/2021/07/27/linux_env_detect/#more">more >></a>
+        
       
 
       
@@ -490,155 +426,9 @@
 <li>通过这个<a href="https://learngitbranching.js.org/?locale=zh_CN" target="_blank" rel="noopener">可视化Git学习网站</a>，复习之前的知识同时强化对分支的理解。经过这一阶段的学习，可以熟练地管理分支，同时掌握一些实用的技巧。</li>
 <li>最近回归到官方文档，最靠谱的一手资料是<a href="https://git-scm.com/doc" target="_blank" rel="noopener">官方文档</a>和<a href="https://github.com/git/git" target="_blank" rel="noopener">源代码</a>。</li>
 </ol>
-<h2 id="初次使用"><a href="#初次使用" class="headerlink" title="初次使用"></a>初次使用</h2><p>这一部分面向初次接触Git的同学介绍一下在Windows下安装和配置过程中值得注意的几点。</p>
-<p><a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网下载安装包</a></p>
-<ul>
-<li>换行符处理设置，默认是true建议选成input或false</li>
-</ul>
-<p><img src="/assets/img/git/gitset_newline.png" alt="img"></p>
-<ul>
-<li><p>commit用户信息设置</p>
-<ul>
-<li>首次运行git commit会提示设置用户信息，该信息不是认证信息，可以任意设置，但是考虑到代码的维护，最好留真实姓名与常用邮箱。</li>
-<li>通过 <code>git config -l</code> 查询，通过 <code>git config --global user.name &quot;YourName&quot;</code> 与 <code>git config --global user.email &quot;YourMail@gmail.com&quot;</code> 设置。</li>
-<li>该信息的设置与我们在代码托管平台（如GitHub）的账号可以不一至，此时commit信息不会关联用户主页</li>
-</ul>
-</li>
-<li><p>ssh密钥认证</p>
-<ul>
-<li>将代码上传至代码托管平台通常需要用户认证，有两种认证方式：https认证与ssh认证。推荐ssh认证方式，因为根据<a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/" target="_blank" rel="noopener">GitHub官网公告</a>，此后不支持用户名/密码认证方式需要用PAT(Personal Access Token)一个很长的token非常不方便。</li>
-<li>ssh密钥的生成与配置将在另一篇博客里详细描述。</li>
-</ul>
-</li>
-</ul>
-<h3 id="配置换行符处理"><a href="#配置换行符处理" class="headerlink" title="配置换行符处理"></a>配置换行符处理</h3><p>这一节解释为什么要改默认的 <code>core.autocrlf</code> 选项。</p>
-<p>不同系统下的默认的换行符不同，Windows用两个字符CRLF表示换行，Linux用LF代示换行，跨平台开发时常常遇到换行符造成的苦恼。Git通过 <code>core.autocrlf</code> 选项控制换行符处理行为。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">core.autocrlf取值</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">true</td>
-<td style="text-align:left">签出时将LF转换为CRLF，commit时将CRLF转换为LF</td>
-</tr>
-<tr>
-<td style="text-align:left">input</td>
-<td style="text-align:left">签出时不做转换，commit时将CRLF转换为LF</td>
-</tr>
-<tr>
-<td style="text-align:left">false</td>
-<td style="text-align:left">签出和commit时均不做转换</td>
-</tr>
-</tbody>
-</table>
-<p>不推荐将该设置设为true，因为主流的编辑器都能正确处理两种换行表示，而Linux下有的软件不能处理CRLF。在我们一个使用场景中需要将代码通过ssh拷贝到Linux服务器然后编译运行，设为true将导致编译出错。将autocrlf设为false人为保证所有的换行符都为LF是最为妥善的做法。</p>
-<h2 id="最常用命令总结"><a href="#最常用命令总结" class="headerlink" title="最常用命令总结"></a>最常用命令总结</h2><p>总结一下在日常使用过程中出现频率最高的一些操作</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">命令</th>
-<th style="text-align:left">作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">git clone</td>
-<td style="text-align:left">从远程仓库拉取代码</td>
-</tr>
-<tr>
-<td style="text-align:left">git log –oneline</td>
-<td style="text-align:left">以单行显示提交记录</td>
-</tr>
-<tr>
-<td style="text-align:left">git status</td>
-<td style="text-align:left">显示工作区状态</td>
-</tr>
-<tr>
-<td style="text-align:left">git add -A</td>
-<td style="text-align:left">将所有文件加入暂存区</td>
-</tr>
-<tr>
-<td style="text-align:left">git commit</td>
-<td style="text-align:left">提交</td>
-</tr>
-<tr>
-<td style="text-align:left">git push</td>
-<td style="text-align:left">将当前分支推到远程仓库</td>
-</tr>
-<tr>
-<td style="text-align:left">git pull</td>
-<td style="text-align:left">将远程仓库拉取到本地，等于 <code>git fetch &amp;&amp; git merge FETCH_HEAD</code></td>
-</tr>
-<tr>
-<td style="text-align:left">git checkout -b newbranch</td>
-<td style="text-align:left">创建并切换分支</td>
-</tr>
-<tr>
-<td style="text-align:left">git [branch &#124; switch] newbranch</td>
-<td style="text-align:left">切换分支</td>
-</tr>
-<tr>
-<td style="text-align:left">git checkout -f commitId</td>
-<td style="text-align:left">分离HEAD指向某一次提交</td>
-</tr>
-<tr>
-<td style="text-align:left">git rebase</td>
-<td style="text-align:left">合并多个commit</td>
-</tr>
-</tbody>
-</table>
-<h2 id="规范化commit信息"><a href="#规范化commit信息" class="headerlink" title="规范化commit信息"></a>规范化commit信息</h2><p>一个项目组保持统一的commit规范，对代码维护很重要，以下给出一组提交信息规范，参考自<a href="https://zhuanlan.zhihu.com/p/268749337" target="_blank" rel="noopener">知乎-如何有效地进行代码 Review？</a>、<a href="https://www.conventionalcommits.org/en/v1.0.0/" target="_blank" rel="noopener">Conventional Commits</a></p>
-<ul>
-<li>feat：新特性</li>
-<li>fix：修改 bug</li>
-<li>refactor：代码重构</li>
-<li>docs：文档更新</li>
-<li>style：代码格式修改</li>
-<li>test：测试用例修改</li>
-<li>chore：其他修改, 比如构建流程, 依赖管理</li>
-</ul>
-<h2 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h2><p>我平时使用<a href="https://code.visualstudio.com/Download" target="_blank" rel="noopener">VSCode</a>+<a href="https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens" target="_blank" rel="noopener">GitLens</a>插件开发和看代码，同时使用<a href="https://tortoisegit.org/" target="_blank" rel="noopener">TortoiseGit</a>工具进行辅助。</p>
-<p>VSCode需要打开源码目录才能使用代码管理，同时其Git面板只占一小部分空间，更多的是为写代码服务；而TortoiseGit集成到资源管理器中，功能更全面、可视化做得更好（可视化的文件图标、可视化分支等），两个工具互补使用体验比较好。</p>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>总结一些在使用Git的过程中我自已遇到过，然后解决的问题</p>
-<h3 id="修改提交信息"><a href="#修改提交信息" class="headerlink" title="修改提交信息"></a>修改提交信息</h3><p>场景：commit后发现commit信息错了或者是添加了不想commit的内容，但还没有push到远程仓库</p>
-<p>有两个方法</p>
-<ol>
-<li>通过 <code>git commit --amend</code> 重新输入commit信息</li>
-<li><code>git reset --soft {commid_id}</code> 回滚到某一个commit，保留工作区和暂存区的内容，然后重新commit</li>
-</ol>
-<p>方法1更简便，方法2可以回退多个版本。</p>
-<h3 id="提交信息乱码的问题"><a href="#提交信息乱码的问题" class="headerlink" title="提交信息乱码的问题"></a>提交信息乱码的问题</h3><p>场景：在git status中文字符显示为8进制编码，类似于</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"\345\260\274\345\217\244\346\213\211\346\226\257\350\265\265\345\233\233"</span></span><br></pre></td></tr></table></figure>
-<p>通过将git配置变量 <code>core.quotepath</code> 设置为false，解决中文文件名称在Git命令输出中的显示问题。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.quotepath <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h3 id="脱离版本控制系统的代码合并"><a href="#脱离版本控制系统的代码合并" class="headerlink" title="脱离版本控制系统的代码合并"></a>脱离版本控制系统的代码合并</h3><p>场景：有些代码改动可能由于各种原因，脱离了版本控制系统的管理，需要合并到某个分支中</p>
-<p>实际上就是手工做一下git merge的过程，git merge的原理是在版本树中选出3个版本的代码，节点A、节点B和两个分支的公共节点C，分别对C做diff然后将不冲突的部分自动合并，冲突部分标识出来。同样在这个情况下我们就将代码对改动前做diff，基于改动前代码用 <code>git init | git add -A | git commit</code> 创建一个新的仓库，将改动后的代码覆盖上去，通过TortoiseGit等工具的比较差异功能（diff）可视化地找出自己的修改。然后在新拉取的分支中加入自己的修改，相当于在最新版中重新写了一遍代码。</p>
-<h3 id="管理远程仓库"><a href="#管理远程仓库" class="headerlink" title="管理远程仓库"></a>管理远程仓库</h3><p>场景：通过https方式clone了代码，但是后面又有提交的需求，想换成ssh的方式；或者同时有多个远程仓库需要提交代码</p>
-<ol>
-<li>方案一，直接改.git/config</li>
-</ol>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">        url = git@github.com:beefnoodles/test.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[remote <span class="string">"origin2"</span>]</span><br><span class="line">        url = https://github.com/beefnoodles/test.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin2/*</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>方案二，通过git remote命令改</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin  <span class="comment"># 删除远程仓库</span></span><br><span class="line">git remote rename origin new_name  <span class="comment"># 或修改仓库名</span></span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:beefnoodles/test.git</span><br><span class="line">git push -u origin dev <span class="comment"># 推送并设置当前分支跟踪远程仓库的dev分支</span></span><br></pre></td></tr></table></figure>
-<h3 id="修改https认证凭据"><a href="#修改https认证凭据" class="headerlink" title="修改https认证凭据"></a>修改https认证凭据</h3><p>场景：有时候通过https进行认证虽然第一次密码输错了，但是被Windows保存了，需要修改或删除凭据</p>
-<ol>
-<li>Win+s快捷键打开搜索-&gt;搜索 <em>windows凭据</em> -&gt;在普通凭据中可以看到保存的账号密码-&gt;可根据需要 <em>编辑</em> 或 <em>删除</em></li>
-</ol>
-<h3 id="删除远程仓库中的文件"><a href="#删除远程仓库中的文件" class="headerlink" title="删除远程仓库中的文件"></a>删除远程仓库中的文件</h3><p>场景：当git add了不想要的文件时</p>
-<ul>
-<li><code>git rm</code> 同时从工作区和索引中删除文件，即本地的文件也被删除了。</li>
-<li><code>git rm --cached</code> 从索引中删除文件,但是本地文件还存在，只是不希望这个文件被版本控制。</li>
-</ul>
-<h3 id="解决github访问慢的问题"><a href="#解决github访问慢的问题" class="headerlink" title="解决github访问慢的问题"></a>解决github访问慢的问题</h3><p>可以通过<a href="https://doc.fastgit.org/zh-cn/guide.html" target="_blank" rel="noopener">FastGit加速</a>，基础用法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/author/repo</span><br><span class="line"><span class="comment"># 变为</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://hub.fastgit.org/author/repo</span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本人使用使用Git也挺多年了，像大多数新手一样开始只会git clone一条命令，刚学会创建分支与合并就误以为自己掌握了Git，当使用场景复杂起来才发现到很多问题，比如提交信息不规范、分支设置不合理、编码问题等。像Git这样的工具 <strong>不是学会的，而是用会的</strong> ，大胆地用起来吧，用在编程上、用在备份配置上、用在写文档上。</p>
-
+        
+          <a class="article-more-a" href="/2021/05/28/learn_git/#more">more >></a>
+        
       
 
       
@@ -722,32 +512,9 @@
         <h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>因为目标平台的原因，我所做的一个自动并行化项目是用C/C++混合编程的。由于一个新的需求，我需要为一个函数接口foo添加一个参数，当我添加完参数后，用gcc命令编译报重复声明。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//简化后，原本声明如下</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> arg1)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//新的声明如下</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> arg1, <span class="keyword">int</span> newarg)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> newarg)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>很明显修改过后的代码不能通过gcc的编译，因为C语言不支持重载，两个foo是重复声明。那么问题来了为什么修改之前能通过编译呢？</p>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>为了解答这个问题我们先构造一些小例子</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//p0p1c0.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>;     <span class="comment">//p0:param 0</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a)</span></span>;<span class="comment">//p1:param 1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    n = foo(); <span class="comment">//c0:call 0 param</span></span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>按此规律构造出8个测试用例：</p>
-<ul>
-<li>p0p1c0.c</li>
-<li>p0p1c1.c</li>
-<li>p1p0c0.c</li>
-<li>p1p0c1.c</li>
-<li>p1p2c1.c</li>
-<li>p1p2c2.c</li>
-<li>p2p1c1.c</li>
-<li>p2p1c2.c</li>
-<li>p2p0c2.c</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line">p0p1c0.c  p1p0c0.c  p1p2c1.c  p2p0c2.c  p2p1c2.c</span><br><span class="line">p0p1c1.c  p1p0c1.c  p1p2c2.c  p2p1c1.c</span><br><span class="line"></span><br><span class="line">$ gcc -c *.c</span><br><span class="line">$ ls *.o</span><br><span class="line">p0p1c1.o  p1p0c1.o  p2p0c2.o</span><br><span class="line"></span><br><span class="line">$ g++ -c *.c</span><br><span class="line">$ ls *.o</span><br><span class="line">p0p1c0.o  p1p0c0.o  p1p2c1.o  p2p0c2.o  p2p1c2.o</span><br><span class="line">p0p1c1.o  p1p0c1.o  p1p2c2.o  p2p1c1.o</span><br></pre></td></tr></table></figure>
-<p>可以看到，用gcc编译时能生成.o文件的是p1p0c1.c、p0p1c1.c、p2p0c2.c，用g++所有用例均能通过编译。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//p1p0c1.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    n = foo(n);</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//p0p1c1.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    n = foo(n);</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//p2p0c2.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    n = foo(n, n);</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>不难看出，没有不参数声明与有参数声明同时出现时无参数声明被忽略了。</p>
-<h2 id="真相大白"><a href="#真相大白" class="headerlink" title="真相大白"></a>真相大白</h2><p>gcc在编译c语言时，对于重复的函数声明，在无参数与带参数声明同时出现的时候，不会产生冲突，这由于在c语言中，int foo()形式的声明表示foo可以有任意类型参数，编译器不做检查。与是无参数声明与带参数声明共同使用的结果为只有带参数的声明生效。这看起来像重载，实际上不是。</p>
-<p>要想表达无参数，在c语言中需要声明为int foo(void)。而在c++中int foo()与int foo(void)是一样的。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>实际上原始的两个声明对于系统来说是一个bug，因为我们实际上想达到的目的是声明int foo(void)。这个bug由于我们在使用中一直使用的是带参数的接口所以一直没有暴露出来。</p>
-<p>在调查的过程中，对于C语言对两个相同函数声明不报错感到很奇怪，甚至一度以为是编译器出bug了。虽然C++声称是C的超集，但是实际上总会有一些“阴暗的小角落”不经意的冒出来。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.geeksforgeeks.org/difference-int-main-int-mainvoid/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/difference-int-main-int-mainvoid/</a></p>
-
+        
+          <a class="article-more-a" href="/2021/03/02/c_lang_nonarguments/#more">more >></a>
+        
       
 
       
@@ -827,24 +594,9 @@
         <p>细数下来博客已经上线一年多了，没有尽心维护，很是惭愧。</p>
 <h2 id="正经的自我介绍"><a href="#正经的自我介绍" class="headerlink" title="正经的自我介绍"></a>正经的自我介绍</h2><p>在这个小站建立时，我是WHUT的一名菜鸡本科生。现在已经是ICT的一枚研究生了。</p>
 <p>从小到大一直是一个自我介绍都会紧张的人，可能只有聊起技术来不会紧张。那就来聊聊技术历程吧！</p>
-<h3 id="雾里探花"><a href="#雾里探花" class="headerlink" title="雾里探花"></a>雾里探花</h3><p>初中开始鼓捣电脑和手机，网罗各种好玩的软件，与刷机技术。那部2700C还被我用凤凰刷机给刷成了砖。当我学会装系统后不久，微软推出了win8的预览版，win8之旅让我成为了长达4年的软粉I am 1%你懂的。我热衷于美化电脑，美化手机，曾经在魔秀网上有我做了不少S40系统的主题。雨滴桌面，软媒魔方，动漫东东那时我对各种软件充满了兴趣。</p>
-<p>也是初中开始接触了ACG文化，翼·年代记是我的入宅作。宅文化对我的影响很深，朋友们常常称我为技术宅。当然也少不了游戏，CF，SD敢达是心中永远的回忆。</p>
-<p>没经接触过正经的编程，此时的我在互联网的世界自由徜徉。</p>
-<h3 id="混沌初开"><a href="#混沌初开" class="headerlink" title="混沌初开"></a>混沌初开</h3><p>我人生中的第一个程序是在高一的时候写出来的。没错是hello world。这个程序是在手机上用c4droid写出来的。这是应该算作我计算机生涯的开始。接着我遇到了引领我的一本书<a href="http://akaedu.github.io/book/" target="_blank" rel="noopener">Linux C编程一站式学习</a>，以现在的眼光看，这本书很粗浅，但不妨碍它成为我初学路上的指路明灯。其前言</p>
-<blockquote>
-<p>为什么要在Linux平台上学C语言？用Windows学C语言不好吗？</p>
-</blockquote>
-<p>这是我第一次接触开源这个概念，本书的这一段话直接让我成为了开源斗士，往后的几年里我给每一个学编程的人都说“放弃windows吧，拥抱开源吧”，我还是太年轻，被带了节奏。很可惜此时的我没有一头扎进计算机的世界，因为还有高考等着我，学习冲淡了我的兴趣，当然学习计算机的种子在这时埋进了我的心里。</p>
-<p>机缘巧合下，我接触到了同年级的“机友”，从他的手中见到了NOKIA N9一个基于Linux系统的手机，我被惊艳到了，高考完后的第一件事就是买了一台二手N9，我在这台N9上跟着教程编译了Vim、Namp，手动解决已经无人维护的源中的deb包的依赖。我感受到了命令行的魅力。</p>
-<p>当然，计算机专业成了我的首选。</p>
-<h3 id="摸爬滚打"><a href="#摸爬滚打" class="headerlink" title="摸爬滚打"></a>摸爬滚打</h3><p>大学我学得很轻松，我全凭兴趣在学习，我积累的计算机技术让我同学间显得鹤立鸡群，我被这样的迷之自信所束缚了眼界，回过头我发现我错过了不少的机会。</p>
-<p>当然我对几乎所有运行在计算机上的东西感兴趣，Adobe PS/AE/PR都玩过，在社团的三年里贡献了不少海报、视频。自学Blender玩玩3d建模。社团举办比赛，我用stm32单片机做了抢答器。也参加了不少校内的项目、外包项目。前端、后端、单片机和运维我都干了个遍，我觉得我已经是个全栈（贬义）开发了，啥都会啥都不精。这也让我陷入了迷茫，我到底喜欢啥？当然目标不明确导致的就是一路的被动。说去读研吧，你为什么不看论文？学好英语；说去工作吧，要面什么岗？还不刷题，还不实习。可以说，大三下学期整个人都是一个被动的状态。</p>
-<p>最终的结果还是不错的，兴趣支撑起了我的学习成绩与竞赛经历，保研使我，我站到了一个更高的平台。</p>
-<h3 id="豁然开朗"><a href="#豁然开朗" class="headerlink" title="豁然开朗"></a>豁然开朗</h3><p>一个更高的平台，让我知道了优秀的同龄人都在做什么。很快我找准了方向，师兄的一些指点胜过万卷书，不同平台给予人的眼界是不同。同时人与人的差距使我明白了，自我实现的源动力应该来源于自身，而不是与它人的比较。</p>
-<h3 id="未来可期"><a href="#未来可期" class="headerlink" title="未来可期"></a>未来可期</h3><p>好好的自我介绍，快被我写成回忆录了XD。这些文字稍显罗嗦，它们不光是给你看的也是给我自己看的。所谓见字如面，相信通过这些文字，我已经将自己介绍得很清楚了（笑）</p>
-<p>时间是单向的，过去的已成为历史，未来才刚刚开始。路遥知马力。</p>
-<p>与君共勉</p>
-
+        
+          <a class="article-more-a" href="/2021/01/22/aboutme/#more">more >></a>
+        
       
 
       
@@ -925,28 +677,9 @@
 <h3 id="不服输的精神"><a href="#不服输的精神" class="headerlink" title="不服输的精神"></a>不服输的精神</h3><p>时间来到大四，偶然间和朋友交流技术问题时得知身边不少同学已经有了自己的小站，写了不少的博文。自诩为技术达人(脸已打肿)，我不能在这方面落后，不就是搭建博客吗，以我多年的技术积累还不是分分钟搞定。</p>
 <p>事实的确是这样，很短的时间内我搞定博客的部署，心里一阵窃喜。那时的我没有明白博客的价值是其中的博文而不是好看的外表。我是被动开始写博客，果不其然，在毕业后，我很快失去了打理博客的动力。</p>
 <p>要强一直是我人生中的一个标签，不服输的精神促使我建立这个博客，但它不能支撑我爱上写博客。说到底，没坚持更新是性格使然。我是一个内向的人，热忠于接受输入而不乐与输出，空间、朋友圈年更是一个常态。更别说写博客这样公开展现自我的事情了。</p>
-<h3 id="态度的转变"><a href="#态度的转变" class="headerlink" title="态度的转变"></a>态度的转变</h3><p>时间转眼到了21年，经过研一上学期充实的学习生活，又经过了疫情的洗礼，转眼间我的研究生生涯已经过半，这一年有得有失，总的来说一切正向着好的方向发展。这一年我积累了不少，我都悉数记录在笔记里。</p>
-<p>最近在做项目的过程中，偶然间我翻到了几个博客，我被博主们的精神打动了，我看了什么是互联网精神，什么是认真对待技术的精神。</p>
-<h4 id="榜样的力量"><a href="#榜样的力量" class="headerlink" title="榜样的力量"></a>榜样的力量</h4><ul>
-<li><a href="http://mindhacks.cn/" target="_blank" rel="noopener">刘未鹏</a></li>
-<li><a href="https://byvoid.com/zht/" target="_blank" rel="noopener">BYVoid</a></li>
-</ul>
-<p><a href="https://blog.csdn.net/pongba/article/details/1659952" target="_blank" rel="noopener">《C++0x漫谈》系列之：多线程内存模型-刘未鹏</a>这篇文章给我眼前一亮的感觉，2007年那个未来的C++11标准还被称为C++0x的时代，在markdown还未普及的年代，该文章的排版如此规范，内容如此硬核。反观现在CSDN新的博文，转载泛滥，格式缺失，内容没有深度。</p>
-<p><a href="https://byvoid.com/zht/blog/recommend-rime/" target="_blank" rel="noopener">推薦一個神級輸入法——Rime</a><br>BYVoid的博客让我感到了一个生活态度，他是一个语言学爱好者，opencc的开发者，我推荐这篇文章是因为我通过这篇文章的推荐用上了rime输入法。博主旅居，环游全世界，他的博文让我感受到了一个人对生活的热爱，对爱好的专注。</p>
-<p>当然打动我博主，促使我动笔的博主，远远不只上述两位。他们是两个时代的代表，前者是80后的老一代互联网人，后者是与我相同的90后新生一代。他们都很好地诠释了互联网精神，这不就是早已在我心中埋下种子的对技术、对生活的追求。</p>
-<h4 id="时间与空间"><a href="#时间与空间" class="headerlink" title="时间与空间"></a>时间与空间</h4><p>同时互联网是超越时间与空间的，2004年的文章与感悟，穿越16年与一为读者见面，这是一种神奇的体验。人的一生是需要留下些什么的，我觉得博客就是一个不错的选择。说不定赶上下一批<a href="https://archiveprogram.github.com/" target="_blank" rel="noopener">GitHub北极代码保存计划</a>。</p>
-<h4 id="自我驱动"><a href="#自我驱动" class="headerlink" title="自我驱动"></a>自我驱动</h4><p>事实上我对技术的是有热情的，我的第三篇的内容也早已想好，那是WHUT的毕业论文的Latex模板，是我和室友用Latex对学校的Word模版的像素级复刻。很可惜由于我懒，该文至今没有面世。究其原因还是上述的性格使然与被动的心态。我想这一点，在我发布本文的时候就不会再是我的桎梏了。</p>
-<h4 id="对自己的几点要求"><a href="#对自己的几点要求" class="headerlink" title="对自己的几点要求"></a>对自己的几点要求</h4><ul>
-<li>分享有价值的东西<ul>
-<li>别人分享过的东西一定是自己消化过后的东西</li>
-<li>不出现纯转载，自身没有感悟的东西</li>
-</ul>
-</li>
-<li>博文质比量重要，不追求数量，但求精致</li>
-</ul>
-<p>如果说要做点什么的活，那就是现在开始<strong>写博客</strong>。</p>
-<p>谨记，路遥知马力</p>
-
+        
+          <a class="article-more-a" href="/2021/01/21/view_of_blog/#more">more >></a>
+        
       
 
       
@@ -1031,18 +764,9 @@
 <p><img src="/assets/img/emacs-plus/mrfz.jpg" alt="德克萨斯做得到吗？"></p>
 <p>就问vim做得到吗？</p>
 <p>默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。</p>
-<h2 id="安装pyim"><a href="#安装pyim" class="headerlink" title="安装pyim"></a>安装pyim</h2><p>pyim插件中包含五笔输入法，首先配置<a href="https://melpa.org/#/getting-started" target="_blank" rel="noopener">melpa源</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">M-x package-install</span><br><span class="line">pyim</span><br><span class="line">M-x package-install</span><br><span class="line">pyim-wbdict</span><br></pre></td></tr></table></figure>
-<p>安装上后配置~/.emacs文件，在文件最后加入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(require &apos;pyim)</span><br><span class="line">;(require &apos;pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置</span><br><span class="line">;(pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置</span><br><span class="line">(setq default-input-method &quot;pyim&quot;)</span><br><span class="line"></span><br><span class="line">(require &apos;pyim-wbdict)</span><br><span class="line">(pyim-wbdict-v98-enable)</span><br><span class="line">(setq pyim-default-scheme &apos;wubi)</span><br></pre></td></tr></table></figure>
-<p>再打开emacs，切换输入法就可以用五笔打字了。</p>
-<h2 id="用内置输入法干点什么"><a href="#用内置输入法干点什么" class="headerlink" title="用内置输入法干点什么"></a>用内置输入法干点什么</h2><p>用emacs输入中文可以干一些什么呢？这意味着可以在没有桌面的服务器环境上输入中文，另一方面在本地的字符终端中也可以通过这个方法实现中文的输入。</p>
-<h3 id="让我们尝试用字符终端输入中文"><a href="#让我们尝试用字符终端输入中文" class="headerlink" title="让我们尝试用字符终端输入中文"></a>让我们尝试用字符终端输入中文</h3><p>按Ctrl+Alt+F1进入tty1，这时你可以发现所有的中文字符都不能显示。这是因为终端只支持psf点阵字体，可以通过showconsolefont命令查看当前psf所有的字符，psf文件在/usr/share/consolefonts目录下。通过setfont可以换字体，但是一般情况下终端只支持8位编码，显然是不能支持显示所有中文字符的。</p>
-<p><img src="/assets/img/emacs-plus/1.png" alt="showconsolefont"></p>
-<p>这里有两种方式，一种是给内核打中文补丁，一种是使用fbterm。就第一种方式来说，为什么发行版内核没有集成Unicode补丁。因为内核维护者是不会接受这样的补丁的，控制台只会在紧急情况下使用。一般情况下用户应该通过桌面环境或者fbterm之类的基于framebuffer的工具获得Unicode的支持。我们就采取第二种方式实现中文支持，从源里下载fbterm。在tty1中运行fbterm并指定字体与大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fbterm -n &quot;WenQuanYi Zen Hei Mono&quot; -s 18</span><br></pre></td></tr></table></figure></p>
-<p>然后就可以愉快地在emacs中输入中文了</p>
-<p><img src="/assets/img/emacs-plus/2.png" alt="终端中的emacs中文输入"></p>
-
+        
+          <a class="article-more-a" href="/2019/05/31/emacs-plus/#more">more >></a>
+        
       
 
       
@@ -1122,76 +846,9 @@
         <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？</p>
 <p>作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb插件，发现vim对gdb的支持并不好，因为vim一开始并没有集成gdb的打算，仅有的几个插件已经很久没更新了。然后在知乎上看到这篇文章<a href="https://zhuanlan.zhihu.com/p/32843449" target="_blank" rel="noopener">终端调试哪家强？</a>对emacs的gdb插件有了一个好印象。但是作为坚定的vim党（逃）我怎么能去用emacs呢（其实是懒，不想学新的按键绑定），抱着试一试的心态用了一下emacs，最后。。。。真香</p>
 <p>其实，如果对开源软件比较了解的话，你就会知道gdb和emacs都是出自<a href="https://en.wikipedia.org/wiki/Richard_Stallman" target="_blank" rel="noopener">Richard Stallman</a>之手。那就不会去找vim的gdb插件了。</p>
-<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>安装emacs，在各大发行版的仓库里都有，通过包管理安装即可。</p>
-<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>Emacs自带gdb插件gud，无需手动安装。（是不是惊讶到了，早在2007年emacs就内置了这个模式<a href="https://www.emacswiki.org/emacs/GdbMode" target="_blank" rel="noopener">emacswiki</a>）</p>
-<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>这一步需要学习emacs的基本操作（大概需要30分钟）</p>
-<ol>
-<li>先记住C-x C-c（Ctrl-x Ctrl-c）（两个连续的组合键）为退出</li>
-<li>运行emacs 按C-h  t进入基础教走程跟着做一遍（<a href="/assets/doc/emacs_tutorial.txt">中文教程</a>）</li>
-<li>补充几条教程里没有提到的命令<ul>
-<li>多窗口的命令<ul>
-<li>C-x 1 只保留当前窗口</li>
-<li>C-x 2 水平分屏</li>
-<li>C-x 3 垂直分屏</li>
-<li>C-x 0 关闭当前窗口</li>
-<li>C-x o 切换窗口</li>
-</ul>
-</li>
-<li>其他常用快捷键<ul>
-<li>C-x k关闭缓冲区</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h3 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h3><p>在~/.emacs启动脚本中加入(没有则创建)以下内容<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;;通过Alt+方向键切换窗口</span></span><br><span class="line">(<span class="name">global-set-key</span> [M-left] 'windmove-left)</span><br><span class="line">(<span class="name">global-set-key</span> [M-right] 'windmove-right)</span><br><span class="line">(<span class="name">global-set-key</span> [M-up] 'windmove-up)</span><br><span class="line">(<span class="name">global-set-key</span> [M-down] 'windmove-down)</span><br><span class="line"><span class="comment">;;设置一些常用的调试快捷键</span></span><br><span class="line">(<span class="name">global-set-key</span> [f5] 'gud-run)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f5] 'gud-cont)</span><br><span class="line">(<span class="name">global-set-key</span> [f6] 'gud-jump)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f6] 'gud-print)</span><br><span class="line">(<span class="name">global-set-key</span> [f7] 'gud-step)</span><br><span class="line">(<span class="name">global-set-key</span> [f8] 'gud-next)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f7] 'gud-stepi)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f8] 'gud-nexti)</span><br><span class="line">(<span class="name">global-set-key</span> [f9] 'gud-break)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f9] 'gud-remove)</span><br><span class="line">(<span class="name">global-set-key</span> [f10] 'gud-until)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f10] 'gud-finish)</span><br><span class="line"></span><br><span class="line">(<span class="name">global-set-key</span> [f4] 'gud-up)</span><br><span class="line">(<span class="name">global-set-key</span> [S-f4] 'gud-down)</span><br><span class="line"><span class="comment">;;启用鼠标支持</span></span><br><span class="line">(<span class="name">require</span> 'xt-mouse)</span><br><span class="line">(<span class="name">xterm-mouse-mode</span>)</span><br><span class="line">(<span class="name">require</span> 'mouse)</span><br><span class="line">(<span class="name">xterm-mouse-mode</span> <span class="literal">t</span>)</span><br><span class="line">(<span class="name">defun</span> track-mouse (<span class="name">e</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">setq</span> mouse-wheel-follow-mouse 't)</span><br><span class="line"></span><br><span class="line">(<span class="name">defvar</span> alternating-scroll-down-next <span class="literal">t</span>)</span><br><span class="line">(<span class="name">defvar</span> alternating-scroll-up-next <span class="literal">t</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> alternating-scroll-down-line ()</span><br><span class="line">  (<span class="name">interactive</span> <span class="string">"@"</span>)</span><br><span class="line">  (<span class="name">when</span> alternating-scroll-down-next</span><br><span class="line">    (<span class="name">scroll-down-line</span>))</span><br><span class="line">  (<span class="name">setq</span> alternating-scroll-down-next (<span class="name">not</span> alternating-scroll-down-next)))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> alternating-scroll-up-line ()</span><br><span class="line">  (<span class="name">interactive</span> <span class="string">"@"</span>)</span><br><span class="line">  (<span class="name">when</span> alternating-scroll-up-next</span><br><span class="line">    (<span class="name">scroll-up-line</span>))</span><br><span class="line">  (<span class="name">setq</span> alternating-scroll-up-next (<span class="name">not</span> alternating-scroll-up-next)))</span><br><span class="line"><span class="comment">;;设置鼠标滚轮每次只滚动一行</span></span><br><span class="line">(<span class="name">global-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;mouse-4&gt;"</span>) 'alternating-scroll-down-line)</span><br><span class="line">(<span class="name">global-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;mouse-5&gt;"</span>) 'alternating-scroll-up-line)</span><br></pre></td></tr></table></figure></p>
-<h3 id="第五步"><a href="#第五步" class="headerlink" title="第五步"></a>第五步</h3><p>输入终端中emacs -nw 打开 emacs 执行 M-x gdb [回车] 输入要调试的程序</p>
-<p><img src="/assets/img/emacs-gdb/1.png" alt="img"></p>
-<p>每次都运行gdb命令很麻烦，在.bashrc中添加一个函数</p>
-<pre><code class="bash"><span class="comment">#emacs gdb</span>
-<span class="function"><span class="title">gdbtool</span></span> () { emacs -nw --<span class="built_in">eval</span> <span class="string">"(gdb \"gdb -i=mi $*\")"</span>;}
-</code></pre>
-<p>直接输入gdbtool hello就能进入emacs调试模式了</p>
-<p><img src="/assets/img/emacs-gdb/2.png" alt="img"></p>
-<p>这就是所谓的emacs的gdb插件，不是和命令行gdb一样吗？你需要看下一步</p>
-<h3 id="第六步"><a href="#第六步" class="headerlink" title="第六步"></a>第六步</h3><p>M-x gdb-ma[ny-window]括号中可以不输入，命令会自动补全</p>
-<p><img src="/assets/img/emacs-gdb/3.png" alt="img"></p>
-  
-<table>
-    <tr>
-        <th align="left">左</th>
-        <th align="right">右</th>
-    </tr>
-    <tr>
-        <td align="left">一般的gdb窗口</td>
-        <td align="right">局部变量和寄存器</td>
-    </tr>
-    <tr>
-        <th colspan="2" align="left">在gdb里用方向键上下回顾历史命令在这里变成了Alt-p和Alt-n</th>
-    </tr>
-        <tr>
-        <td align="left">源代码</td>
-        <td align="right">程序输出</td>
-    </tr>
-    <tr>
-        <th colspan="2" align="left">可以用鼠标左键点击代码最左边设置和取消断点</th>
-    </tr>
-        <tr>
-        <td align="left">调用栈</td>
-        <td align="right">断点和线程</td>
-    </tr>
-    <tr>
-        <th colspan="2" align="left">在调用栈和断点用鼠标中间键点击可以浏览源代码</th>
-    </tr>
-</table>
-
-<h3 id="赠品"><a href="#赠品" class="headerlink" title="赠品"></a>赠品</h3><ol>
-<li>窗口乱了怎么办？执行两次M-x gdb-ma[ny-window]</li>
-<li>在用鼠标中间键点击浏览代码时，可能会触发gdb命令窗口被代码占据的bug，这时选择被占据的窗口用C-x k关闭buffer即可</li>
-<li>我想临时把一个窗口放大，然后回到多窗口。用<a href="http://www.ergoemacs.org/emacs/emacs_winner_mode.html" target="_blank" rel="noopener">winner-mode</a>。运行M-x winner-mode打开winner-mode，C-x 1关闭当前窗口以外窗口，然后通过C-c ←返回。</li>
-</ol>
-<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>关于配合etags进行代码跳转和补全这里就不说了，网上有很多教程。emacs给我带来了全新的终端体验，包括emacs自带的输入法等等，我会在下一篇博客中介绍。</p>
-
+        
+          <a class="article-more-a" href="/2019/05/29/emacs-gdb/#more">more >></a>
+        
       
 
       

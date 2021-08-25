@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://beefnoodles.cc">
   <title>emacs奇巧淫技 | 现代魔法</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。 安装pyimpyim插件中包含五笔输入法，首先配置m">
+  <meta name="description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。">
 <meta name="keywords" content="linux,emacs">
 <meta property="og:type" content="article">
 <meta property="og:title" content="emacs奇巧淫技">
 <meta property="og:url" content="http://beefnoodles.cc/2019/05/31/emacs-plus/index.html">
 <meta property="og:site_name" content="现代魔法">
-<meta property="og:description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。 安装pyimpyim插件中包含五笔输入法，首先配置m">
+<meta property="og:description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-plus/mrfz.jpg">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-plus/1.png">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-plus/2.png">
-<meta property="og:updated_time" content="2021-08-24T05:06:53.000Z">
+<meta property="og:updated_time" content="2021-08-25T14:21:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="emacs奇巧淫技">
-<meta name="twitter:description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。 安装pyimpyim插件中包含五笔输入法，首先配置m">
+<meta name="twitter:description" content="自从上次尝试了emacs，无意间发现了一个新的功能，那就是emacs内置了输入法！而且还不止一种语言  就问vim做得到吗？ 默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。">
 <meta name="twitter:image" content="http://beefnoodles.cc/assets/img/emacs-plus/mrfz.jpg">
   
     <link rel="alternative" href="/atom.xml" title="现代魔法" type="application/atom+xml">
@@ -187,6 +187,7 @@
 <p><img src="/assets/img/emacs-plus/mrfz.jpg" alt="德克萨斯做得到吗？"></p>
 <p>就问vim做得到吗？</p>
 <p>默认配置下按C-\就会启动或关闭输入法，M-x set-input-method便可以配置输入法，emacs内置了近百种输入法，能输入中文、日文、韩文等等世界各地的语言。很可惜其中没有五笔输入法，但是我就是想学五笔XD。</p>
+<a id="more"></a>
 <h2 id="安装pyim"><a href="#安装pyim" class="headerlink" title="安装pyim"></a>安装pyim</h2><p>pyim插件中包含五笔输入法，首先配置<a href="https://melpa.org/#/getting-started" target="_blank" rel="noopener">melpa源</a></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">M-x package-install</span><br><span class="line">pyim</span><br><span class="line">M-x package-install</span><br><span class="line">pyim-wbdict</span><br></pre></td></tr></table></figure>
 <p>安装上后配置~/.emacs文件，在文件最后加入</p>

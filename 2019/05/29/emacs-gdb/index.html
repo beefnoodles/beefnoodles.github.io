@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/1.png">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/2.png">
 <meta property="og:image" content="http://beefnoodles.cc/assets/img/emacs-gdb/3.png">
-<meta property="og:updated_time" content="2021-08-24T05:06:32.000Z">
+<meta property="og:updated_time" content="2021-08-25T14:21:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何优雅地使用终端进行调试emacs-gdb">
 <meta name="twitter:description" content="前言用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？ 作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb">
@@ -186,6 +186,7 @@
         <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>用gdb调试的人，多半是被环境所逼。如果有条件用gui的调试环境为什么不用呢，难道用gui的调试环境会损失什么功能？难道在调用栈间进行跳转用鼠标点击不比输入up、down方便？</p>
 <p>作为忠实的开源软件拥护者，我一度相信了网上所谓极客说的“抛弃gui吧！在gdb用命令行调试能让你更专注。“直到我对着命令行敲了无数遍list、无数遍bt。然后我开始寻找救赎，作为一个vim党我当然是先去找vim的gdb插件，发现vim对gdb的支持并不好，因为vim一开始并没有集成gdb的打算，仅有的几个插件已经很久没更新了。然后在知乎上看到这篇文章<a href="https://zhuanlan.zhihu.com/p/32843449" target="_blank" rel="noopener">终端调试哪家强？</a>对emacs的gdb插件有了一个好印象。但是作为坚定的vim党（逃）我怎么能去用emacs呢（其实是懒，不想学新的按键绑定），抱着试一试的心态用了一下emacs，最后。。。。真香</p>
 <p>其实，如果对开源软件比较了解的话，你就会知道gdb和emacs都是出自<a href="https://en.wikipedia.org/wiki/Richard_Stallman" target="_blank" rel="noopener">Richard Stallman</a>之手。那就不会去找vim的gdb插件了。</p>
+<a id="more"></a>
 <h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>安装emacs，在各大发行版的仓库里都有，通过包管理安装即可。</p>
 <h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>Emacs自带gdb插件gud，无需手动安装。（是不是惊讶到了，早在2007年emacs就内置了这个模式<a href="https://www.emacswiki.org/emacs/GdbMode" target="_blank" rel="noopener">emacswiki</a>）</p>
 <h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>这一步需要学习emacs的基本操作（大概需要30分钟）</p>
