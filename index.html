@@ -464,6 +464,241 @@
 
 
   
+    <article id="post-learn_git" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/05/28/learn_git/">Git学习路线与技巧分享</a>
+    </h1>
+  
+
+        
+        <a href="/2021/05/28/learn_git/" class="archive-article-date">
+  	<time datetime="2021-05-27T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近小组里有新的同学进来，需要教他们一些基本工具的使用，网上的教程已经足够好了，没必要从零开始写，我对现有的一些资料进行一个整理，给出一条的Git学习路线，并附有一些常见问题的解法和自己的心得体会。</p>
+<h2 id="学习路线"><a href="#学习路线" class="headerlink" title="学习路线"></a>学习路线</h2><ol>
+<li>初次接触可以看一些比较好的博客，当初我看的是<a href="https://www.liaoxuefeng.com/wiki/896043488029600" target="_blank" rel="noopener">这篇博客</a>还不错。经过这一阶段学习，可以达到正常使用Git的水平。</li>
+<li>通过这个<a href="https://learngitbranching.js.org/?locale=zh_CN" target="_blank" rel="noopener">可视化Git学习网站</a>，复习之前的知识同时强化对分支的理解。经过这一阶段的学习，可以熟练地管理分支，同时掌握一些实用的技巧。</li>
+<li>最近回归到官方文档，最靠谱的一手资料是<a href="https://git-scm.com/doc" target="_blank" rel="noopener">官方文档</a>和<a href="https://github.com/git/git" target="_blank" rel="noopener">源代码</a>。</li>
+</ol>
+<h2 id="初次使用"><a href="#初次使用" class="headerlink" title="初次使用"></a>初次使用</h2><p>这一部分面向初次接触Git的同学介绍一下在Windows下安装和配置过程中值得注意的几点。</p>
+<p><a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网下载安装包</a></p>
+<ul>
+<li>换行符处理设置，默认是true建议选成input或false</li>
+</ul>
+<p><img src="/assets/img/git/gitset_newline.png" alt="img"></p>
+<ul>
+<li><p>commit用户信息设置</p>
+<ul>
+<li>首次运行git commit会提示设置用户信息，该信息不是认证信息，可以任意设置，但是考虑到代码的维护，最好留真实姓名与常用邮箱。</li>
+<li>通过 <code>git config -l</code> 查询，通过 <code>git config --global user.name &quot;YourName&quot;</code> 与 <code>git config --global user.email &quot;YourMail@gmail.com&quot;</code> 设置。</li>
+<li>该信息的设置与我们在代码托管平台（如GitHub）的账号可以不一至，此时commit信息不会关联用户主页</li>
+</ul>
+</li>
+<li><p>ssh密钥认证</p>
+<ul>
+<li>将代码上传至代码托管平台通常需要用户认证，有两种认证方式：https认证与ssh认证。推荐ssh认证方式，因为根据<a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/" target="_blank" rel="noopener">GitHub官网公告</a>，此后不支持用户名/密码认证方式需要用PAT(Personal Access Token)一个很长的token非常不方便。</li>
+<li>ssh密钥的生成与配置将在另一篇博客里详细描述。</li>
+</ul>
+</li>
+</ul>
+<h3 id="配置换行符处理"><a href="#配置换行符处理" class="headerlink" title="配置换行符处理"></a>配置换行符处理</h3><p>这一节解释为什么要改默认的 <code>core.autocrlf</code> 选项。</p>
+<p>不同系统下的默认的换行符不同，Windows用两个字符CRLF表示换行，Linux用LF代示换行，跨平台开发时常常遇到换行符造成的苦恼。Git通过 <code>core.autocrlf</code> 选项控制换行符处理行为。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">core.autocrlf取值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">true</td>
+<td style="text-align:left">签出时将LF转换为CRLF，commit时将CRLF转换为LF</td>
+</tr>
+<tr>
+<td style="text-align:left">input</td>
+<td style="text-align:left">签出时不做转换，commit时将CRLF转换为LF</td>
+</tr>
+<tr>
+<td style="text-align:left">false</td>
+<td style="text-align:left">签出和commit时均不做转换</td>
+</tr>
+</tbody>
+</table>
+<p>不推荐将该设置设为true，因为主流的编辑器都能正确处理两种换行表示，而Linux下有的软件不能处理CRLF。在我们一个使用场景中需要将代码通过ssh拷贝到Linux服务器然后编译运行，设为true将导致编译出错。将autocrlf设为false人为保证所有的换行符都为LF是最为妥善的做法。</p>
+<h2 id="最常用命令总结"><a href="#最常用命令总结" class="headerlink" title="最常用命令总结"></a>最常用命令总结</h2><p>总结一下在日常使用过程中出现频率最高的一些操作</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">git clone</td>
+<td style="text-align:left">从远程仓库拉取代码</td>
+</tr>
+<tr>
+<td style="text-align:left">git log –oneline</td>
+<td style="text-align:left">以单行显示提交记录</td>
+</tr>
+<tr>
+<td style="text-align:left">git status</td>
+<td style="text-align:left">显示工作区状态</td>
+</tr>
+<tr>
+<td style="text-align:left">git add -A</td>
+<td style="text-align:left">将所有文件加入暂存区</td>
+</tr>
+<tr>
+<td style="text-align:left">git commit</td>
+<td style="text-align:left">提交</td>
+</tr>
+<tr>
+<td style="text-align:left">git push</td>
+<td style="text-align:left">将当前分支推到远程仓库</td>
+</tr>
+<tr>
+<td style="text-align:left">git pull</td>
+<td style="text-align:left">将远程仓库拉取到本地，等于 <code>git fetch &amp;&amp; git merge FETCH_HEAD</code></td>
+</tr>
+<tr>
+<td style="text-align:left">git checkout -b newbranch</td>
+<td style="text-align:left">创建并切换分支</td>
+</tr>
+<tr>
+<td style="text-align:left">git [branch &#124; switch] newbranch</td>
+<td style="text-align:left">切换分支</td>
+</tr>
+<tr>
+<td style="text-align:left">git checkout -f commitId</td>
+<td style="text-align:left">分离HEAD指向某一次提交</td>
+</tr>
+<tr>
+<td style="text-align:left">git rebase</td>
+<td style="text-align:left">合并多个commit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="规范化commit信息"><a href="#规范化commit信息" class="headerlink" title="规范化commit信息"></a>规范化commit信息</h2><p>一个项目组保持统一的commit规范，对代码维护很重要，以下给出一组提交信息规范，参考自<a href="https://zhuanlan.zhihu.com/p/268749337" target="_blank" rel="noopener">知乎-如何有效地进行代码 Review？</a>、<a href="https://www.conventionalcommits.org/en/v1.0.0/" target="_blank" rel="noopener">Conventional Commits</a></p>
+<ul>
+<li>feat：新特性</li>
+<li>fix：修改 bug</li>
+<li>refactor：代码重构</li>
+<li>docs：文档更新</li>
+<li>style：代码格式修改</li>
+<li>test：测试用例修改</li>
+<li>chore：其他修改, 比如构建流程, 依赖管理</li>
+</ul>
+<h2 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h2><p>我平时使用<a href="https://code.visualstudio.com/Download" target="_blank" rel="noopener">VSCode</a>+<a href="https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens" target="_blank" rel="noopener">GitLens</a>插件开发和看代码，同时使用<a href="https://tortoisegit.org/" target="_blank" rel="noopener">TortoiseGit</a>工具进行辅助。</p>
+<p>VSCode需要打开源码目录才能使用代码管理，同时其Git面板只占一小部分空间，更多的是为写代码服务；而TortoiseGit集成到资源管理器中，功能更全面、可视化做得更好（可视化的文件图标、可视化分支等），两个工具互补使用体验比较好。</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>总结一些在使用Git的过程中我自已遇到过，然后解决的问题</p>
+<h3 id="修改提交信息"><a href="#修改提交信息" class="headerlink" title="修改提交信息"></a>修改提交信息</h3><p>场景：commit后发现commit信息错了或者是添加了不想commit的内容，但还没有push到远程仓库</p>
+<p>有两个方法</p>
+<ol>
+<li>通过 <code>git commit --amend</code> 重新输入commit信息</li>
+<li><code>git reset --soft {commid_id}</code> 回滚到某一个commit，保留工作区和暂存区的内容，然后重新commit</li>
+</ol>
+<p>方法1更简便，方法2可以回退多个版本。</p>
+<h3 id="提交信息乱码的问题"><a href="#提交信息乱码的问题" class="headerlink" title="提交信息乱码的问题"></a>提交信息乱码的问题</h3><p>场景：在git status中文字符显示为8进制编码，类似于</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"\345\260\274\345\217\244\346\213\211\346\226\257\350\265\265\345\233\233"</span></span><br></pre></td></tr></table></figure>
+<p>通过将git配置变量 <code>core.quotepath</code> 设置为false，解决中文文件名称在Git命令输出中的显示问题。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.quotepath <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h3 id="脱离版本控制系统的代码合并"><a href="#脱离版本控制系统的代码合并" class="headerlink" title="脱离版本控制系统的代码合并"></a>脱离版本控制系统的代码合并</h3><p>场景：有些代码改动可能由于各种原因，脱离了版本控制系统的管理，需要合并到某个分支中</p>
+<p>实际上就是手工做一下git merge的过程，git merge的原理是在版本树中选出3个版本的代码，节点A、节点B和两个分支的公共节点C，分别对C做diff然后将不冲突的部分自动合并，冲突部分标识出来。同样在这个情况下我们就将代码对改动前做diff，基于改动前代码用 <code>git init | git add -A | git commit</code> 创建一个新的仓库，将改动后的代码覆盖上去，通过TortoiseGit等工具的比较差异功能（diff）可视化地找出自己的修改。然后在新拉取的分支中加入自己的修改，相当于在最新版中重新写了一遍代码。</p>
+<h3 id="管理远程仓库"><a href="#管理远程仓库" class="headerlink" title="管理远程仓库"></a>管理远程仓库</h3><p>场景：通过https方式clone了代码，但是后面又有提交的需求，想换成ssh的方式；或者同时有多个远程仓库需要提交代码</p>
+<ol>
+<li>方案一，直接改.git/config</li>
+</ol>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">        url = git@github.com:beefnoodles/test.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[remote <span class="string">"origin2"</span>]</span><br><span class="line">        url = https://github.com/beefnoodles/test.git</span><br><span class="line">        fetch = +refs/heads/*:refs/remotes/origin2/*</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>方案二，通过git remote命令改</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin  <span class="comment"># 删除远程仓库</span></span><br><span class="line">git remote rename origin new_name  <span class="comment"># 或修改仓库名</span></span><br><span class="line"></span><br><span class="line">git remote add origin git@github.com:beefnoodles/test.git</span><br><span class="line">git push -u origin dev <span class="comment"># 推送并设置当前分支跟踪远程仓库的dev分支</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改https认证凭据"><a href="#修改https认证凭据" class="headerlink" title="修改https认证凭据"></a>修改https认证凭据</h3><p>场景：有时候通过https进行认证虽然第一次密码输错了，但是被Windows保存了，需要修改或删除凭据</p>
+<ol>
+<li>Win+s快捷键打开搜索-&gt;搜索 <em>windows凭据</em> -&gt;在普通凭据中可以看到保存的账号密码-&gt;可根据需要 <em>编辑</em> 或 <em>删除</em></li>
+</ol>
+<h3 id="删除远程仓库中的文件"><a href="#删除远程仓库中的文件" class="headerlink" title="删除远程仓库中的文件"></a>删除远程仓库中的文件</h3><p>场景：当git add了不想要的文件时</p>
+<ul>
+<li><code>git rm</code> 同时从工作区和索引中删除文件，即本地的文件也被删除了。</li>
+<li><code>git rm --cached</code> 从索引中删除文件,但是本地文件还存在，只是不希望这个文件被版本控制。</li>
+</ul>
+<h3 id="解决github访问慢的问题"><a href="#解决github访问慢的问题" class="headerlink" title="解决github访问慢的问题"></a>解决github访问慢的问题</h3><p>可以通过<a href="https://doc.fastgit.org/zh-cn/guide.html" target="_blank" rel="noopener">FastGit加速</a>，基础用法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/author/repo</span><br><span class="line"><span class="comment"># 变为</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://hub.fastgit.org/author/repo</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本人使用使用Git也挺多年了，像大多数新手一样开始只会git clone一条命令，刚学会创建分支与合并就就误以为自己掌握了Git，当使用场景复杂起来才发现到很多问题，比如提交信息不规范、分支设置不合理、编码问题等。像Git这样的工具 <strong>不是学会的，而是用会的</strong> ，大胆地用起来吧，用在编程上、用在备份配置上、用在写文档上。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Git</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">教程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/05/28/learn_git/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-c_lang_nonarguments" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -724,11 +959,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">view</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">view</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -1121,31 +1356,15 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">docker,部署,容器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">tools,gdb,linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">emacs,linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">view</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">关于我,随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">view,观点,随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">C/C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">语言特性</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1177,7 +1396,15 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">观点</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">教程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1185,11 +1412,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">C/C++</a>
+                <a href="javascript:void(0)" class="js-tag color5">view</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">语言特性</a>
+                <a href="javascript:void(0)" class="js-tag color3">观点</a>
               </li>
             
             <div class="clearfix"></div>
